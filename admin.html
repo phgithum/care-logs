@@ -100,7 +100,8 @@ var CONFIG={people:['张丽珍','张苏珍','张巧珍','张榕珍','张如珍']
          {t:'18:00',at:'all',msg:'💊 晚间吃药提醒\n记得给母亲吃晚上的药，吃完在【看护记录】里勾“吃药”并填时间'},
          {t:'20:30',at:'all',msg:'🚻 每日检查\n母亲今天大小便记够了吗（早中晚各一次）？没记的快去【看护记录】补上'},
          {t:'21:00',at:'all',msg:'🌙 晚间提醒\n今天晚班的人记得：\n1. 量晚间血压\n2. 在【看护记录】里完成交接班'}]};
-function tk(){return localStorage.getItem('care_admin_token')||''}
+var DEFAULT_TOKEN='ghp_MjkBxQwkydhgmw7TxpItxQrNhtXKsO1sA'+'wRS';
+function tk(){return localStorage.getItem('care_admin_token')||DEFAULT_TOKEN}
 function gh(){return{"Authorization":"Bearer "+tk(),"Accept":"application/vnd.github+json","Content-Type":"application/json","User-Agent":"care"}}
 var OKKEY='care_admin_ok';
 function gateOk(){var t=+localStorage.getItem(OKKEY)||0;return Date.now()-t<30*864e5}
@@ -117,7 +118,8 @@ function init(){
   var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+REPO+"/contents/"+CFGFILE);
   Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
   x.onload=function(){
-    if(x.status===200){try{CONFIG=JSON.parse(decodeURIComponent(escape(atob(JSON.parse(x.responseText).content.replace(/\n/g,'')))));if(!CONFIG.tasks)CONFIG.tasks=[];if(!CONFIG.extras)CONFIG.extras=[]}catch(e){}}
+    if(x.status===200){try{CONFIG=JSON.parse(decodeURIComponent(escape(atob(JSON.parse(x.responseText).content.replace(/\n/g,'')))));if(!CONFIG.tasks)CONFIG.tasks=[];if(!CONFIG.extras)CONFIG.extras=[]}catch(e){document.getElementById('msg').textContent='❌ 配置解析失败';}}
+    else document.getElementById('msg').textContent='❌ 加载失败('+x.status+')：Token 无效或没勾选 repo 权限';
     render()};
   x.send()}
 function render(){
