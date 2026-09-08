@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>看护记录</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f6f8;color:#1f2430;padding:14px;max-width:720px;margin:0 auto;padding-bottom:80px}
+h1{font-size:20px}
+.sub{color:#8a93a3;font-size:13px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+nav{display:flex;gap:6px;background:#fff;border:1px solid #e5e8ef;border-radius:10px;padding:5px;margin-bottom:14px;position:sticky;top:0;z-index:5}
+nav button{flex:1;border:none;background:none;padding:9px 2px;border-radius:8px;font-size:14px;color:#5b6472;cursor:pointer}
+nav button.on{background:#2f6fed;color:#fff}
+/* 左侧三个小标签 */
+nav button.tab-s{flex:.72;font-size:13px;padding:9px 0}
+/* 右侧两个大按钮：记录 / 账单（老人优先，一眼能看到） */
+nav button.tab-big{flex:1.9;font-size:18px;font-weight:700;padding:11px 0;border-radius:9px}
+nav button.tab-big.rec{background:#eef4ff;color:#2f6fed;border:2px solid #2f6fed}
+nav button.tab-big.rec.on{background:#2f6fed;color:#fff}
+nav button.tab-big.bill{background:#fff3ea;color:#d9661f;border:2px solid #e5762f}
+nav button.tab-big.bill.on{background:#e5762f;color:#fff}
+.card{background:#fff;border:1px solid #e5e8ef;border-radius:10px;padding:14px;margin-bottom:12px}
+.card h3{font-size:15px;margin-bottom:10px}
+label{display:block;font-size:12px;color:#5b6472;margin:8px 0 4px}
+input,select,textarea{width:100%;padding:9px 10px;border:1px solid #dfe3ea;border-radius:8px;font-size:14px;background:#fafbfc;font-family:inherit}
+textarea{min-height:60px;resize:vertical}
+.row{display:flex;gap:8px}
+.row>div{flex:1}
+button{border:none;border-radius:10px;padding:14px 22px;font-size:16px;cursor:pointer;font-family:inherit}
+.pri{background:#2f6fed;color:#fff}
+.gray{background:#eef0f4;color:#3a4150}
+.small{padding:8px 14px;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:10px 16px;border:1px solid #dfe3ea;border-radius:22px;font-size:15px;background:#fafbfc;cursor:pointer}
+.chip.on{background:#2f6fed;border-color:#2f6fed;color:#fff}
+.item{border-bottom:1px solid #f0f2f6;padding:9px 0;font-size:14px}
+.item:last-child{border-bottom:none}
+.item .t{color:#8a93a3;font-size:12px;margin-top:2px}
+.money{color:#e5762f;font-weight:bold}
+.empty{color:#8a93a3;font-size:13px;text-align:center;padding:16px 0}
+.ok{color:#1a9e55;font-size:13px;min-height:18px;margin-top:6px}
+.tip{font-size:12px;color:#8a93a3}
+.warn{background:#fff8e6;border:1px solid #f0dfa0;color:#8a6d1a;border-radius:8px;padding:8px 10px;font-size:13px;margin:8px 0}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1f2430;color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;display:none;z-index:99}
+#loginPage{position:fixed;inset:0;background:#f5f6f8;display:flex;align-items:center;justify-content:center;z-index:10;padding:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.pbtn{padding:14px;border:2px solid #e5e8ef;border-radius:10px;background:#fff;font-size:15px;cursor:pointer}
+.pbtn:active{border-color:#2f6fed;background:#eef4ff}
+.addrow{display:flex;gap:8px;margin-top:4px}
+.hide{display:none!important}
+.wkrow{display:flex;gap:6px;margin-bottom:6px;font-size:13px;align-items:center}
+.wkday{width:74px;flex:none;color:#5b6472}
+.wkslot{flex:1;text-align:center;padding:7px 2px;border:1px solid #e5e8ef;border-radius:7px;background:#fafbfc;cursor:pointer;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wkslot.mine{border-color:#2f6fed;background:#eef4ff;color:#2f6fed}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:20;padding:16px}
+.mbox{background:#fff;border-radius:12px;padding:18px;width:100%;max-width:340px}
+.syncdot{font-size:11px;color:#8a93a3;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div id="loginPage">
+  <div style="width:100%;max-width:360px;background:#fff;border:1px solid #e5e8ef;border-radius:14px;padding:24px;text-align:center">
+    <h1>看护记录</h1>
+    <p class="sub" style="margin-top:6px">选一下你是谁，之后就自动记住了</p>
+    <div class="grid" id="peopleGrid" style="grid-template-columns:1fr 1fr 1fr"></div>
+    <div class="addrow"><input id="newPerson" placeholder="填写自己的名字" maxlength="10" onkeydown="if(event.key==='Enter')loginCustom()"><button class="pri" onclick="loginCustom()">进入</button></div>
+    <p style="margin-top:14px"><a class="syncdot" onclick="openSettings()">⚙️ 设置</a></p>
+  </div>
+</div>
+
+<header style="display:none" id="appHead">
+  <div><h1 style="font-size:17px">看护记录 <span class="sub" id="whoami"></span></h1></div>
+  <div><button class="gray small" onclick="logout()">退出</button> <button class="gray small" onclick="openSettings()">⚙️</button></div>
+</header>
+
+<nav id="appNav" style="display:none">
+  <button data-p="shift" class="tab-s" onclick="go('shift')">排班</button>
+  <button data-p="hand" class="tab-s" onclick="go('hand')">交接</button>
+  <button data-p="hist" class="tab-s" onclick="go('hist')">查询</button>
+  <button data-p="rec" class="tab-big rec on" onclick="go('rec')">📝 记录</button>
+  <button data-p="bill" class="tab-big bill" onclick="go('bill')">💰 账单</button>
+</nav>
+
+<div id="main"></div>
+<div id="toast"></div>
+<div id="settingsModal"></div>
+
+<script>
+/* ================= 看护记录 V3 · 重构版 ================= */
+var VER='V3-20260908';
+var DB_KEY='care_db_v2', SES='care_ses';
+var DEF_REPO='phgithum/care-logs';
+var DEF_TOKEN='ghp_MjkBxQwkydhgmw7TxpItxQrNhtXKsO1sA'+'wRS';
+var DEFAULT_HOOK='https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=a1c92aec-335c-4f9b-a9c1-e02f753d5d1b';
+var RANK=['老大','老二','老三','老四','老五','老六','老七','老八'];
+var ITEMS=['吃饭','喝水','吃药','大便','小便','洗澡','拖地','换尿布','量血压','散步','睡觉'];
+var TIMED=['吃药','大便','小便'];
+var SN={m:'早',a:'中',e:'晚'};
+var pick={}, CFG={b1:12,b2:18,handSum:true};
+
+function load(){try{var d=JSON.parse(localStorage.getItem(DB_KEY));if(d)return d}catch(e){}
+  return {people:['张丽珍','张苏珍','张巧珍','张榕珍','张如珍'],extras:[],shifts:{},records:[],bills:[],hands:[],repo:'',token:'',hook:''}}
+function save(){try{localStorage.setItem(DB_KEY,JSON.stringify(DB))}catch(e){}}
+var DB=load(), ME=localStorage.getItem(SES)||'';
+if(!Array.isArray(DB.people))DB.people=['张丽珍','张苏珍','张巧珍','张榕珍','张如珍'];
+if(!Array.isArray(DB.extras))DB.extras=[];
+if(!DB.shifts)DB.shifts={};if(!Array.isArray(DB.records))DB.records=[];
+if(!Array.isArray(DB.bills))DB.bills=[];if(!Array.isArray(DB.hands))DB.hands=[];
+if(!DB.repo)DB.repo=DEF_REPO;
+if(!DB.token)DB.token=DEF_TOKEN;
+if(!DB.hook)DB.hook=DEFAULT_HOOK;
+save();
+
+/* ---------- 基础 ---------- */
+function today(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function now(){var d=new Date();return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)}
+function toast(s){var t=document.getElementById('toast');t.textContent=s;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(function(){t.style.display='none'},2500)}
+function sn(s){return SN[s]||s}
+function shiftOf(t){var h=+t.split(':')[0];return h<CFG.b1?'m':h<CFG.b2?'a':'e'}
+function esc(s){return (''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+/* ---------- 同步层（重构：多通道+错误码+密钥剥离） ---------- */
+function gh(){return{'Authorization':'Bearer '+DB.token,'Accept':'application/vnd.github+json'}}
+var _lastStat='';
+function rawGet(url,cb){
+  var x=new XMLHttpRequest();x.open('GET',url);
+  Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
+  x.onload=function(){cb(x.status,x.responseText)};
+  x.onerror=function(){cb(0,'')};x.send()}
+function rawPut(url,body,cb){
+  var x=new XMLHttpRequest();x.open('PUT',url);
+  x.setRequestHeader('Content-Type','application/json');
+  Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
+  x.onload=function(){cb(x.status,x.responseText)};
+  x.onerror=function(){cb(0,'')};x.send(JSON.stringify(body))}
+function proxied(u){return 'https://corsproxy.io/?url='+encodeURIComponent(u)}
+function pull(cb){
+  if(!DB.repo||!DB.token){cb(null);return}
+  var api='https://api.github.com/repos/'+DB.repo+'/contents/data.json';
+  rawGet(api,function(st,tx){
+    if(st!==200){cb(null);return}
+    try{cb(JSON.parse(decodeURIComponent(escape(atob(JSON.parse(tx).content.replace(/\n/g,''))))))}catch(e){cb(null)}})}
+function push(cb){
+  if(!DB.repo||!DB.token){cb&&cb(false,'未配置');return}
+  var api='https://api.github.com/repos/'+DB.repo+'/contents/data.json';
+  var up={};Object.keys(DB).forEach(function(k){if(k!=='token'&&k!=='hook'&&k!=='repo')up[k]=DB[k]});
+  var content=btoa(unescape(encodeURIComponent(JSON.stringify(up))));
+  function attempt(sha,useProxy,failCb){
+    var body={message:'sync',content:content,branch:'main'};if(sha)body.sha=sha;
+    var url=useProxy?proxied(api):api;
+    rawPut(url,body,function(st,tx){
+      if(st>=200&&st<300){cb&&cb(true,'');return}
+      if(!useProxy&&st>0){ // 直连失败→重取sha再试→仍败走代理
+        rawGet(api,function(s2,t2){
+          var ns=(s2===200)?(function(){try{return JSON.parse(t2).sha}catch(e){return null}})():null;
+          attempt(ns,false,function(){attempt(null,true,failCb)})});
+      }else{(failCb||cb)&&cb(false,st+' '+(tx||'').slice(0,60))}})}
+  rawGet(api,function(st,tx){
+    var sha=null;if(st===200){try{sha=JSON.parse(tx).sha}catch(e){}}
+    attempt(sha,false,function(err){cb&&cb(false,err)})})}
+function commit(){save();push(function(ok,err){
+  toast(ok?'✅ 已同步':'⚠️ 同步失败('+err+')');setDot(ok?'✅ 已同步':'⚠️ 失败')})}
+function setDot(s){var d=document.getElementById('syncDot');if(d)d.textContent=s}
+function merge(r){if(!r)return;var s={};
+  DB.records.forEach(function(x){s[x.id]=1});(r.records||[]).forEach(function(x){if(!s[x.id])DB.records.push(x)});
+  s={};DB.bills.forEach(function(x){s[x.id]=1});(r.bills||[]).forEach(function(x){if(!s[x.id])DB.bills.push(x)});
+  s={};DB.hands.forEach(function(x){s[x.id]=1});(r.hands||[]).forEach(function(x){if(!s[x.id])DB.hands.push(x)});
+  Object.keys(r.shifts||{}).forEach(function(d){DB.shifts[d]=DB.shifts[d]||{};['m','a','e'].forEach(function(k){if(r.shifts[d][k])DB.shifts[d][k]=r.shifts[d][k]})});
+  (r.people||[]).forEach(function(p){if(DB.people.indexOf(p)<0)DB.people.push(p)});
+  save()}
+function fullSync(cb){pull(function(r){if(r){merge(r);push(function(ok){if(cb)cb(ok)});applyCfgView()}else{push(function(ok){if(cb)cb(ok)})}})}
+
+/* ---------- 后台 config 同步 ---------- */
+function syncCfg(){
+  if(!DB.repo||!DB.token)return;
+  rawGet('https://api.github.com/repos/'+DB.repo+'/contents/config.json',function(st,tx){
+    if(st!==200)return;
+    try{var c=JSON.parse(decodeURIComponent(escape(atob(JSON.parse(tx).content.replace(/\n/g,'')))));
+      if(c.people&&c.people.length){DB.people=c.people;save();renderPeople();
+        if(ME&&DB.people.indexOf(ME)<0&&DB.extras.indexOf(ME)<0){localStorage.removeItem(SES);location.reload()}}
+      CFG.b1=+(c.b1||'12:00').split(':')[0];CFG.b2=+(c.b2||'18:00').split(':')[0];
+      CFG.handSum=c.handSum!==false;}catch(e){}})}
+
+/* ---------- 登录 ---------- */
+function renderPeople(){var g=document.getElementById('peopleGrid');g.innerHTML='';
+  DB.people.forEach(function(n){var b=document.createElement('button');b.className='pbtn';b.textContent=n;b.onclick=function(){login(n)};g.appendChild(b)})}
+function login(n){ME=n;localStorage.setItem(SES,n);sessionStorage.setItem(SES,n);
+  document.getElementById('loginPage').classList.add('hide');
+  document.getElementById('appHead').style.display='flex';
+  document.getElementById('appNav').style.display='flex';
+  document.getElementById('whoami').textContent='· '+n;go('rec');
+  setDot('同步中…');fullSync(function(ok){if(ok)setDot('✅ 已同步')})}
+function loginCustom(){var v=document.getElementById('newPerson').value.trim();if(!v)return;
+  if(DB.people.indexOf(v)<0&&DB.extras.indexOf(v)<0){DB.extras.push(v);save();regExtra(v)}
+  login(v)}
+function logout(){localStorage.removeItem(SES);sessionStorage.removeItem(SES);location.reload()}
+function regExtra(n){
+  if(!DB.repo||!DB.token)return;
+  rawGet('https://api.github.com/repos/'+DB.repo+'/contents/config.json',function(st,tx){
+    if(st!==200)return;
+    try{var c=JSON.parse(decodeURIComponent(escape(atob(JSON.parse(tx).content.replace(/\n/g,'')))));
+      c.extras=c.extras||[];if(c.extras.indexOf(n)<0)c.extras.push(n);
+      var body={message:'register '+n,content:btoa(unescape(encodeURIComponent(JSON.stringify(c,null,1)))),sha:JSON.parse(tx).sha,branch:'main'};
+      var p=new XMLHttpRequest();p.open('PUT','https://api.github.com/repos/'+DB.repo+'/contents/config.json');
+      Object.keys(gh()).forEach(function(k){p.setRequestHeader(k,gh()[k])});p.setRequestHeader('Content-Type','application/json');
+      p.send(JSON.stringify(body))}catch(e){}})}
+
+/* ---------- 路由 ---------- */
+function go(p){document.querySelectorAll('#appNav button').forEach(function(b){b.classList.toggle('on',b.dataset.p===p)});
+  if(p==='rec')pageRec();if(p==='shift')pageShift();if(p==='bill')pageBill();if(p==='hand')pageHand();if(p==='hist')pageHist()}
+
+/* ---------- 记录页 ---------- */
+function pageRec(){
+  var h='<div class="card"><h3>记一笔</h3>'
+    +'<div class="row"><div><label>日期</label><input type="date" id="rD" value="'+today()+'"></div>'
+    +'<div><label>时间</label><input type="time" id="rT" value="'+now()+'"></div></div>'
+    +'<label>做了什么（可多选）</label><div class="chips">'+ITEMS.map(function(t){return '<span class="chip" onclick="pk(this,\''+t+'\')">'+t+'</span>'}).join('')+'</div>'
+    +'<div id="itemTimes"></div>'
+    +'<label>补充说明（状态等）</label><textarea id="rN" placeholder="例如：大便正常成型；血压135/88"></textarea>'
+    +'<div style="margin-top:10px"><button class="pri" onclick="saveRec()">保存</button><span class="ok" id="rMsg"></span></div></div>'
+    +'<div class="card"><h3>今天的记录 <span style="float:right;font-size:13px;color:#2f6fed;cursor:pointer" onclick="refreshRec()" id="recRefresh">⟳ 刷新</span></h3>'
+    +'<div id="recStats" class="tip" style="margin-bottom:8px"></div><div id="rList"></div></div>';
+  document.getElementById('main').innerHTML=h;pick={};renderToday()}
+function pk(el,t){
+  if(pick[t]){delete pick[t];el.classList.remove('on');var r=document.getElementById('it_'+t);if(r)r.remove()}
+  else{pick[t]=1;el.classList.add('on');
+    if(TIMED.indexOf(t)>=0){
+      var d=document.createElement('div');d.className='row';d.id='it_'+t;d.style.marginTop='8px';
+      d.innerHTML='<span style="font-size:12px;color:#5b6472;width:auto;align-self:center">'+t+'大概</span>';
+      var sel=document.createElement('select');sel.style.width='120px';
+      var cur=new Date().getHours();
+      for(var hh=0;hh<24;hh++){var o=document.createElement('option');o.value=hh;o.textContent=hh+'点左右';if(hh===cur)o.selected=true;sel.appendChild(o)}
+      d.appendChild(sel);document.getElementById('itemTimes').appendChild(d)}}}
+function saveRec(){
+  var d=document.getElementById('rD').value||today(),t=document.getElementById('rT').value||now();
+  var parts=[];
+  TIMED.forEach(function(x){if(pick[x]){var it=document.getElementById('it_'+x);var hv=it?(it.querySelector('select').value+'点左右'):t;parts.push(x+'（'+hv+'）')}});
+  Object.keys(pick).forEach(function(x){if(TIMED.indexOf(x)<0)parts.push(x)});
+  var items=parts.join('、'),n=document.getElementById('rN').value.trim();
+  if(!items&&!n){toast('选一下做了什么');return}
+  var c=items+(n?(items?'；'+n:n):'');
+  if(recEdit&&!items){c=n;recEdit.d=d;recEdit.t=t;recEdit.c=c;commit();
+    document.getElementById('rMsg').textContent='✅ 已更新';recEdit=null;renderToday();
+    notify('✏️ **'+ME+'** 更新了一条记录：'+c.slice(0,120));return}
+  var r={id:''+Date.now()+Math.floor(Math.random()*999),d:d,t:t,by:ME,s:shiftOf(t),c:c};
+  DB.records.push(r);commit();
+  document.getElementById('rN').value='';pick={};document.getElementById('itemTimes').innerHTML='';
+  document.querySelectorAll('.chip.on').forEach(function(e){e.classList.remove('on')});
+  document.getElementById('rMsg').textContent='✅ 已保存';
+  var bb=document.querySelector('#main .pri');if(bb)bb.textContent='保存';
+  recEdit=null;renderToday();
+  notify('📝 **'+ME+'** '+d+' '+t+'（'+sn(r.s)+'班）\n'+c)}
+function refreshRec(){var b=document.getElementById('recRefresh');b.textContent='⟳ 拉取中…';
+  fullSync(function(){b.textContent='⟳ 刷新';renderToday()})}
+function renderToday(){var l=DB.records.filter(function(r){return r.d===today()}).sort(function(a,b){return a.t<b.t?1:-1});
+  var cnt=function(k){return l.filter(function(r){return r.c.indexOf(k)>=0}).length};
+  document.getElementById('recStats').textContent='今日统计：大便 '+cnt('大便')+' 次 · 小便 '+cnt('小便')+' 次 · 吃药 '+cnt('吃药')+' 次';
+  document.getElementById('rList').innerHTML=l.length?l.map(function(r){
+    return '<div class="item"><b>'+esc(r.by)+'</b>（'+sn(r.s)+'班 '+r.t+'）<div>'+esc(r.c)+'</div><div class="t"><a style="color:#2f6fed;cursor:pointer" onclick="editRec(\''+r.id+'\')">改</a>　<a style="color:#e5484d;cursor:pointer" onclick="delRec(\''+r.id+'\')">删</a></div></div>'}).join(''):'<div class="empty">今天还没有记录</div>'}
+var recEdit=null;
+function editRec(id){var r=DB.records.filter(function(x){return x.id===id})[0];if(!r)return;
+  recEdit=r;go('rec');
+  document.getElementById('rD').value=r.d;document.getElementById('rT').value=r.t;
+  document.getElementById('rN').value=r.c;
+  var b=document.querySelector('#main .pri');if(b)b.textContent='更新这条';
+  document.getElementById('rMsg').textContent='正在修改这条记录，改完点更新'}
+function delRec(id){var i=DB.records.findIndex(function(x){return x.id===id});
+  if(i<0)return;if(!confirm('确定删除这条记录？'))return;
+  DB.records.splice(i,1);commit();renderToday();toast('已删除')}
+
+/* ---------- 排班页 ---------- */
+function pageShift(){
+  var d=document.getElementById('sD')?document.getElementById('sD').value:today();
+  var day=DB.shifts[d]||{};
+  var h='<div class="card"><h3>选班（点一下值班，再点取消）</h3>'
+    +'<label>日期（选明天=报明天的班）</label><input type="date" id="sD" value="'+d+'" onchange="pageShift()">'
+    +'<div class="row" style="margin-top:8px">';
+  [['m','早班'],['a','中班'],['e','晚班']].forEach(function(x){
+    var s=x[0],w=day[s]||'';
+    h+='<div style="text-align:center;padding:14px 4px;border:2px solid '+(w===ME?'#2f6fed':'#e5e8ef')+';border-radius:8px;cursor:pointer;background:'+(w===ME?'#eef4ff':'#fafbfc')+'" onclick="pickShift(\''+d+'\',\''+s+'\')">'
+      +'<b style="font-size:14px">'+x[1]+'</b><div style="font-size:12px;color:#8a93a3;margin-top:5px">'+esc(w||'没人')+'</div>'
+      +(w===ME?'<br><button class="gray small" style="margin-top:6px" onclick="event.stopPropagation();swapAsk(\''+d+'\',\''+s+'\')">换班</button>':'')+'</div>'});
+  h+='</div></div><div class="card"><h3>7 天排班表</h3><div id="wk"></div></div>';
+  document.getElementById('main').innerHTML=h;renderWk(d)}
+function renderWk(d0){
+  var h='';var base=new Date(d0+'T00:00:00');
+  for(var i=0;i<7;i++){var dt=new Date(base.getTime()+i*864e5);
+    var d=dt.getFullYear()+'-'+('0'+(dt.getMonth()+1)).slice(-2)+'-'+('0'+dt.getDate()).slice(-2);
+    var day=DB.shifts[d]||{};
+    h+='<div class="wkrow"><span class="wkday">'+d.slice(5)+' 周'+'日一二三四五六'[dt.getDay()]+'</span>';
+    ['m','a','e'].forEach(function(s){
+      var w=day[s]||'';
+      h+='<span class="wkslot '+(w===ME?'mine':'')+'" onclick="pickShift(\''+d+'\',\''+s+'\')">'+sn(s)+'·'+esc(w||'空')+'</span>'});
+    h+='</div>'}
+  document.getElementById('wk').innerHTML=h}
+function pickShift(d,s){
+  DB.shifts[d]=DB.shifts[d]||{};
+  var cur=DB.shifts[d][s]||'';
+  if(cur===ME){delete DB.shifts[d][s];commit();pageShift();notify('📅 '+ME+' 取消 '+d+' '+sn(s)+'班');return}
+  if(cur){toast('已被 '+cur+' 选了');return}
+  DB.shifts[d][s]=ME;commit();pageShift();
+  notify('📅 **'+ME+'** 报了 '+d+' **'+sn(s)+'班**')}
+function swapAsk(d,s){
+  var others=DB.people.filter(function(p){return p!==ME});
+  var html='<div class="mbox"><h3 style="margin:0 0 10px">换班 · '+d+' '+sn(s)+'班</h3>'
+    +'<label>换给谁</label><select id="swTo">'+others.map(function(p){return '<option>'+esc(p)+'</option>'}).join('')+'</select>'
+    +'<div class="row" style="margin-top:12px"><button class="gray" onclick="document.getElementById(\'swModal\').classList.add(\'hide\')">取消</button>'
+    +'<button class="pri" onclick="doSwap(\''+d+'\',\''+s+'\')">确认换班</button></div></div>';
+  var m=document.createElement('div');m.className='modal';m.id='swModal';m.innerHTML=html;
+  document.body.appendChild(m)}
+function doSwap(d,s){
+  var to=document.getElementById('swTo').value;
+  DB.shifts[d][s]=to;commit();
+  document.getElementById('swModal').classList.add('hide');pageShift();
+  notify('🔄 **'+ME+'** 把 '+d+' '+sn(s)+'班 换给了 **'+to+'**，请留意')}
+function curShift(){return shiftOf(now())}
+function nxtShift(){var s=curShift();return s==='m'?'a':s==='e'?'e':'e'}
+
+/* ---------- 账单页 ---------- */
+var billEdit=null;
+function pageBill(){
+  var h='<div class="card"><h3>'+(billEdit?'改这条账':'记一笔账')+'</h3>'
+    +'<div class="row"><div><label>买了什么</label><input id="bC" placeholder="如：纸尿裤一箱"></div>'
+    +'<div style="max-width:130px"><label>花了多少（元）</label><input id="bM" type="number" step="0.1" placeholder="0"></div></div>'
+    +'<div style="margin-top:10px"><button class="pri" onclick="saveBill()">'+(billEdit?'更新这条':'保存')+'</button> '
+    +(billEdit?'<button class="gray" onclick="billEdit=null;pageBill()">取消</button>':'')
+    +'<span class="ok" id="bMsg"></span></div></div>'
+    +'<div class="card"><h3>今天的账</h3><div id="bList"></div><div id="bTotal" style="margin-top:8px;font-weight:bold"></div></div>'
+    +'<div class="card"><h3>账单总结</h3>'
+    +'<div class="row"><select id="sumRange" onchange="renderSummary()" style="width:auto;flex:none">'
+    +'<option value="week">本周</option><option value="month">本月</option><option value="all">全部</option></select></div>'
+    +'<div id="sumBox" style="margin-top:10px"></div></div>';
+  document.getElementById('main').innerHTML=h;
+  if(billEdit){document.getElementById('bC').value=billEdit.c;document.getElementById('bM').value=billEdit.m}
+  renderBills()}
+function saveBill(){
+  var c=document.getElementById('bC').value.trim(),m=parseFloat(document.getElementById('bM').value);
+  if(!c||isNaN(m)){toast('填一下东西和金额');return}
+  var d=today();
+  if(billEdit){var od=billEdit.c+' '+billEdit.m.toFixed(1)+'元';
+    billEdit.c=c;billEdit.m=m;commit();document.getElementById('bMsg').textContent='✅ 已更新';
+    billEdit=null}
+  else{DB.bills.push({id:''+Date.now(),d:d,c:c,m:m,by:ME,t:now()});commit();
+    document.getElementById('bMsg').textContent='✅ 已保存'}
+  pageBill()}
+function renderBills(){
+  var l=DB.bills.filter(function(b){return b.d===today()});
+  var sum=0;
+  document.getElementById('bList').innerHTML=l.length?l.map(function(b){sum+=b.m;
+    return '<div class="item"><b>'+esc(b.c)+'</b> — <span class="money">'+b.m.toFixed(1)+' 元</span><div class="t">'+esc(b.by)+' '+b.t+' <a style="color:#2f6fed;cursor:pointer" onclick="editBill(\''+b.id+'\')">改</a> <a style="color:#e5484d;cursor:pointer" onclick="delBill(\''+b.id+'\')">删</a></div></div>'}).join(''):'<div class="empty">今天还没花钱记录</div>';
+  document.getElementById('bTotal').textContent='今天合计：'+sum.toFixed(1)+' 元'}
+function renderSummary(){
+  var range=document.getElementById('sumRange')?document.getElementById('sumRange').value:'month';
+  var now=new Date(),start;
+  if(range==='week'){var dow=now.getDay()||7;start=new Date(now.getTime()-(dow-1)*864e5)}
+  else if(range==='month')start=new Date(now.getFullYear(),now.getMonth(),1);
+  else start=new Date(0);
+  function fmt(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+  var lim=fmt(start);
+  var l=DB.bills.filter(function(b){return b.d>=lim});
+  var total=0,byPerson={},byDay={};
+  l.forEach(function(b){total+=b.m;byPerson[b.by]=(byPerson[b.by]||0)+b.m;byDay[b.d]=(byDay[b.d]||0)+b.m});
+  var names=Object.keys(byPerson).sort(function(a,b){return byPerson[b]-byPerson[a]});
+  var h='<div style="font-size:15px;font-weight:bold;margin-bottom:8px">'+(range==='week'?'本周':range==='month'?'本月':'全部')+'合计：'+total.toFixed(1)+' 元（'+l.length+' 笔）</div>';
+  if(names.length){
+    h+='<label>谁花的</label>';
+    names.forEach(function(n){
+      var pct=total?Math.round(byPerson[n]/total*100):0;
+      h+='<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>'+esc(n)+'</span><b>'+byPerson[n].toFixed(1)+' 元</b></div>'
+        +'<div style="background:#eef0f4;border-radius:6px;height:8px;margin-top:3px"><div style="background:#2f6fed;border-radius:6px;height:8px;width:'+pct+'%"></div></div></div>'});
+    var days=Object.keys(byDay).sort().reverse().slice(0,7);
+    h+='<label style="margin-top:10px">最近每天花销</label>';
+    days.forEach(function(d){h+='<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:1px solid #f0f2f6"><span>'+d+'</span><b>'+byDay[d].toFixed(1)+' 元</b></div>'});
+  }else h+='<div class="empty">这个范围还没有账单</div>';
+  document.getElementById('sumBox').innerHTML=h}
+function editBill(id){var b=DB.bills.filter(function(x){return x.id===id})[0];if(b){billEdit=b;pageBill()}}
+function delBill(id){var i=DB.bills.findIndex(function(x){return x.id===id});
+  if(i<0)return;if(!confirm('确定删除这条账？'))return;
+  DB.bills.splice(i,1);commit();pageBill()}
+
+/* ---------- 交接页 ---------- */
+function prevShiftOf(s){return s==='a'?'m':s==='e'?'a':'e'}
+function shiftSummary(d,s){
+  var l=DB.records.filter(function(r){return r.d===d&&r.s===s});
+  if(!l.length)return '';
+  return l.map(function(r){return r.t+' '+r.by+'：'+r.c}).join('\n')}
+function pageHand(){
+  var d=today(),s=curShift();
+  var prev=shiftSummary(d,prevShiftOf(s));
+  var warn=(CFG.handSum&&!prev)?'<div class="warn">⚠️ 今天'+sn(prevShiftOf(s))+'班还没有填写任何记录，请提醒 ta 补填</div>':'';
+  var h='<div class="card"><h3>交接 · '+sn(s)+'班</h3>'
+    +(CFG.handSum?'<label>上一班（'+sn(prevShiftOf(s))+'班）做了什么</label><div style="background:#f7f8fa;border:1px solid #e5e8ef;border-radius:8px;padding:10px;font-size:13px;white-space:pre-wrap">'+(prev||'（还没有记录）')+'</div>':'')
+    +warn
+    +'<label>要交代的事情</label><textarea id="hS" style="min-height:110px" placeholder="如：母亲状态稳定；晚上血压偏高21点再量"></textarea>'
+    +'<label>交给谁</label><select id="hTo">'+DB.people.concat(DB.extras).filter(function(p){return p!==ME}).map(function(p){return '<option>'+esc(p)+'</option>'}).join('')+'</select>'
+    +'<div style="margin-top:10px"><button class="pri" onclick="doHand()">完成交接</button></div><div class="ok" id="hMsg"></div></div>'
+    +'<div class="card"><h3>交接记录</h3><div id="hList">'+handList()+'</div></div>';
+  document.getElementById('main').innerHTML=h}
+function handList(){
+  return DB.hands.length?DB.hands.slice().reverse().map(function(r){
+    return '<div class="item"><b>'+esc(r.from)+'</b> → <b>'+esc(r.to)+'</b><div class="t">'+r.d+'</div><div>'+esc(r.s)+'</div></div>'}).join(''):'<div class="empty">还没有交接记录</div>'}
+function doHand(){
+  var d=today(),s=curShift();
+  var su=document.getElementById('hS').value.trim();
+  if(!su){toast('填一下交接内容');return}
+  var r={id:''+Date.now(),d:d,from:ME,to:document.getElementById('hTo').value,fs:s,ts:nxtShift(),s:su};
+  DB.hands.push(r);commit();
+  document.getElementById('hMsg').textContent='✅ 交接完成，已通知 '+r.to;
+  document.getElementById('hList').innerHTML=handList();
+  var extra=CFG.handSum?('\n上一班情况：\n'+(shiftSummary(d,prevShiftOf(s))||'（上一班未填写记录，请补填）')):'';
+  notify('🔄 **交接班** '+d+'\n'+sn(s)+'班 **'+ME+'** → '+sn(r.ts)+'班 **@'+r.to+'** 请接手'+extra+'\n——\n'+su.slice(0,180))}
+function handRemind(){/* 交接提醒占位 */}
+
+/* ---------- 查询页 ---------- */
+function pageHist(){
+  var h='<div class="card"><h3>按天查询</h3><input type="date" id="hD" value="'+today()+'" onchange="renderHist()"><div id="histBox" style="margin-top:10px"></div></div>';
+  document.getElementById('main').innerHTML=h;renderHist()}
+function renderHist(){
+  var d=document.getElementById('hD').value||today();
+  var recs=DB.records.filter(function(r){return r.d===d}).sort(function(a,b){return a.t<b.t?-1:1});
+  var bills=DB.bills.filter(function(b){return b.d===d});
+  var hands=DB.hands.filter(function(x){return x.d===d});
+  var bs=0;bills.forEach(function(b){bs+=b.m});
+  var h='<label>记录（'+recs.length+'）</label>'+(recs.length?recs.map(function(r){
+    return '<div class="item"><b>'+esc(r.by)+'</b>（'+sn(r.s)+'班 '+r.t+'）<div>'+esc(r.c)+'</div></div>'}).join(''):'<div class="empty">无</div>');
+  h+='<label style="margin-top:12px">账单（合计 '+bs.toFixed(1)+' 元）</label>'+(bills.length?bills.map(function(b){
+    return '<div class="item">'+esc(b.c)+' — <span class="money">'+b.m.toFixed(1)+' 元</span><div class="t">'+esc(b.by)+' '+b.t+'</div></div>'}).join(''):'<div class="empty">无</div>');
+  h+='<label style="margin-top:12px">交接（'+hands.length+'）</label>'+(hands.length?hands.map(function(r){
+    return '<div class="item"><b>'+esc(r.from)+'</b> → <b>'+esc(r.to)+'</b><div>'+esc(r.s)+'</div></div>'}).join(''):'<div class="empty">无</div>');
+  document.getElementById('histBox').innerHTML=h}
+
+/* ---------- 企微播报 ---------- */
+function notify(md){if(!DB.hook)return;
+  try{var x=new XMLHttpRequest();x.open('POST',DB.hook,true);
+    x.setRequestHeader('Content-Type','text/plain;charset=utf-8');
+    x.send(JSON.stringify({msgtype:'markdown',markdown:{content:md}}))}catch(e){}}
+
+/* ---------- 设置 ---------- */
+function openSettings(){
+  var m=document.createElement('div');m.className='modal';m.id='setModal';
+  m.innerHTML='<div class="mbox"><h3 style="margin:0 0 10px">设置（本机）</h3>'
+    +'<label>群机器人 Webhook（留空=用默认）</label><input id="setHook" value="'+esc(DB.hook===DEFAULT_HOOK?'':DB.hook)+'">'
+    +'<label>数据同步（一般不用动）</label><input id="setRepo" value="'+esc(DB.repo)+'" placeholder="仓库"><input id="setToken" value="'+esc(DB.token)+'" placeholder="Token" style="margin-top:6px">'
+    +'<div class="row" style="margin-top:12px"><button class="gray" onclick="document.getElementById(\'setModal\').classList.add(\'hide\')">关闭</button>'
+    +'<button class="pri" onclick="saveSettings()">保存</button></div>'
+    +'<div class="tip" style="margin-top:8px">版本 '+VER+'</div></div>';
+  document.getElementById('settingsModal').innerHTML='';document.getElementById('settingsModal').appendChild(m)}
+function saveSettings(){
+  DB.hook=document.getElementById('setHook').value.trim()||DEFAULT_HOOK;
+  DB.repo=document.getElementById('setRepo').value.trim()||DEF_REPO;
+  DB.token=document.getElementById('setToken').value.trim()||DEF_TOKEN;
+  save();document.getElementById('setModal').classList.add('hide');toast('已保存');
+  fullSync()}
+
+/* ---------- 启动 ---------- */
+renderPeople();
+if(ME&&(DB.people.indexOf(ME)>=0||DB.extras.indexOf(ME)>=0))login(ME);
+syncCfg();
+setInterval(function(){if(ME)fullSync()},5*60*1000);
+</script>
+</body>
+</html>
