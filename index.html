@@ -1,191 +1,206 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-page-node-id="HoDkB3uhplKtqAjZSquKMl">
-<head data-page-node-id="G5Ach5lbiwtaO4SodcTeti">
-<meta charset="UTF-8" data-page-node-id="37f41pFQxaAt9HlsoOnvg9">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="Z8KpcI4bhsdYrLd0bNPjkE">
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>看护记录</title>
 <style>
-body{margin:0;background:#f5f7fa;color:#2b2f36;font-size:15px;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
-.hide{display:none!important}
-#loginPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.box{background:#fff;border:1px solid #e5e8ef;border-radius:10px;padding:28px 22px;width:100%;max-width:360px}
-h1{font-size:19px;text-align:center;margin:0 0 4px}
-.sub{text-align:center;font-size:12px;color:#8a93a3;margin-bottom:18px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.pbtn{padding:11px;border:1px solid #e5e8ef;border-radius:8px;background:#fafbfc;font-size:14px;cursor:pointer}
-.addrow{display:flex;gap:8px}
-.addrow input{flex:1;padding:9px 11px;border:1px solid #e5e8ef;border-radius:8px;font-size:14px}
-button.pri{background:#2f6fed;color:#fff;border:none;border-radius:8px;padding:9px 14px;font-size:14px;cursor:pointer}
-button.gray{background:#eef1f6;color:#2b2f36;border:none;border-radius:8px;padding:9px 14px;font-size:14px;cursor:pointer}
-button.small{padding:5px 10px;font-size:12px}
-header{background:#fff;border-bottom:1px solid #e5e8ef;padding:10px 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0}
-header b{font-size:15px}
-header span{font-size:12px;color:#8a93a3}
-header .sp{flex:1}
-nav{display:flex;background:#fff;border-bottom:1px solid #e5e8ef}
-nav button{flex:1;padding:11px 2px;border:none;background:none;font-size:13px;color:#8a93a3;cursor:pointer;border-bottom:2px solid transparent}
-nav button.on{color:#2f6fed;border-bottom-color:#2f6fed;font-weight:600}
-main{max-width:720px;margin:0 auto;padding:12px 12px 50px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f6f8;color:#1f2430;padding:14px;max-width:720px;margin:0 auto;padding-bottom:80px}
+h1{font-size:20px}
+.sub{color:#8a93a3;font-size:13px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+nav{display:flex;gap:6px;background:#fff;border:1px solid #e5e8ef;border-radius:10px;padding:5px;margin-bottom:14px;position:sticky;top:0;z-index:5}
+nav button{flex:1;border:none;background:none;padding:9px 2px;border-radius:8px;font-size:14px;color:#5b6472;cursor:pointer}
+nav button.on{background:#2f6fed;color:#fff}
 .card{background:#fff;border:1px solid #e5e8ef;border-radius:10px;padding:14px;margin-bottom:12px}
-.card h3{font-size:14px;margin:0 0 10px}
-label{display:block;font-size:12px;color:#8a93a3;margin:8px 0 3px}
-input,select,textarea{width:100%;padding:9px 11px;border:1px solid #e5e8ef;border-radius:8px;font-size:14px;box-sizing:border-box}
-textarea{min-height:70px;resize:vertical}
-.row{display:flex;gap:8px}.row>*{flex:1}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
-.chip{padding:7px 12px;border:1px solid #e5e8ef;border-radius:16px;background:#fafbfc;font-size:13px;cursor:pointer}
-.chip.on{background:#2f6fed;color:#fff;border-color:#2f6fed}
-.item{border-bottom:1px solid #eef0f4;padding:9px 2px;font-size:14px}
-.item:last-child{border:none}
-.item .t{font-size:12px;color:#8a93a3}
-.money{color:#d33;font-weight:600}
-.total{font-size:13px;color:#8a93a3;text-align:right;padding:6px 2px}
-.tip{background:#fff8e6;border:1px solid #f5d98a;border-radius:8px;padding:10px 12px;font-size:13px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-td,th{padding:6px 4px;text-align:left;border-bottom:1px solid #eef0f4}
-.ok{color:#1a9e5c;font-size:12px;margin-top:6px;min-height:15px}
-.empty{text-align:center;color:#8a93a3;font-size:13px;padding:20px 0}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:99;padding:20px}
-.mbox{background:#fff;border-radius:10px;padding:20px;width:100%;max-width:380px;max-height:85vh;overflow:auto}
+.card h3{font-size:15px;margin-bottom:10px}
+label{display:block;font-size:12px;color:#5b6472;margin:8px 0 4px}
+input,select,textarea{width:100%;padding:9px 10px;border:1px solid #dfe3ea;border-radius:8px;font-size:14px;background:#fafbfc;font-family:inherit}
+textarea{min-height:60px;resize:vertical}
+.row{display:flex;gap:8px}
+.row>div{flex:1}
+button{border:none;border-radius:8px;padding:10px 16px;font-size:14px;cursor:pointer;font-family:inherit}
+.pri{background:#2f6fed;color:#fff}
+.gray{background:#eef0f4;color:#3a4150}
+.small{padding:5px 10px;font-size:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:7px 12px;border:1px solid #dfe3ea;border-radius:20px;font-size:13px;background:#fafbfc;cursor:pointer}
+.chip.on{background:#2f6fed;border-color:#2f6fed;color:#fff}
+.item{border-bottom:1px solid #f0f2f6;padding:9px 0;font-size:14px}
+.item:last-child{border-bottom:none}
+.item .t{color:#8a93a3;font-size:12px;margin-top:2px}
+.money{color:#e5762f;font-weight:bold}
+.empty{color:#8a93a3;font-size:13px;text-align:center;padding:16px 0}
+.ok{color:#1a9e55;font-size:13px;min-height:18px;margin-top:6px}
+.tip{font-size:12px;color:#8a93a3}
+.warn{background:#fff8e6;border:1px solid #f0dfa0;color:#8a6d1a;border-radius:8px;padding:8px 10px;font-size:13px;margin:8px 0}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1f2430;color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;display:none;z-index:99}
+#loginPage{position:fixed;inset:0;background:#f5f6f8;display:flex;align-items:center;justify-content:center;z-index:10;padding:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.pbtn{padding:14px;border:2px solid #e5e8ef;border-radius:10px;background:#fff;font-size:15px;cursor:pointer}
+.pbtn:active{border-color:#2f6fed;background:#eef4ff}
+.addrow{display:flex;gap:8px;margin-top:4px}
+.hide{display:none!important}
+.wkrow{display:flex;gap:6px;margin-bottom:6px;font-size:13px;align-items:center}
+.wkday{width:74px;flex:none;color:#5b6472}
+.wkslot{flex:1;text-align:center;padding:7px 2px;border:1px solid #e5e8ef;border-radius:7px;background:#fafbfc;cursor:pointer;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wkslot.mine{border-color:#2f6fed;background:#eef4ff;color:#2f6fed}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:20;padding:16px}
+.mbox{background:#fff;border-radius:12px;padding:18px;width:100%;max-width:340px}
+.syncdot{font-size:11px;color:#8a93a3;cursor:pointer}
 </style>
 </head>
-<body data-page-node-id="RlpcNAlHsxwTqOB3MMlfBl">
+<body>
 
 <div id="loginPage">
-  <div class="box">
+  <div style="width:100%;max-width:360px;background:#fff;border:1px solid #e5e8ef;border-radius:14px;padding:24px;text-align:center">
     <h1>看护记录</h1>
-    <p class="sub">第一次进来选一下你是谁，之后就自动记住了</p>
-    <div class="grid" id="peopleGrid"></div>
-    <div class="addrow"><input id="newPerson" placeholder="填写自己的名字" maxlength="10"><button class="pri" onclick="loginCustom()">进入</button></div>
-    <p style="text-align:center;margin:12px 0 0"><a style="font-size:12px;color:#8a93a3;cursor:pointer" onclick="openSettings()">⚙️ 设置（微信播报 / 数据同步）</a></p>
+    <p class="sub" style="margin-top:6px">选一下你是谁，之后就自动记住了</p>
+    <div class="grid" id="peopleGrid" style="grid-template-columns:1fr 1fr 1fr"></div>
+    <div class="addrow"><input id="newPerson" placeholder="填写自己的名字" maxlength="10" onkeydown="if(event.key==='Enter')loginCustom()"><button class="pri" onclick="loginCustom()">进入</button></div>
+    <p style="margin-top:14px"><a class="syncdot" onclick="openSettings()">⚙️ 设置</a></p>
   </div>
-</div>div>
 </div>
 
-<div id="app" class="hide" data-page-node-id="dgep3gJle3tXKsiG2dQeZJ">
-  <header data-page-node-id="qqVXONGDN3NBKt6EegJPW9"><b data-page-node-id="KmH3NofV9UJf8XPWWPZeoV">看护记录</b><span id="whoami" data-page-node-id="2W9nzTlOia77k0xDI4TZtg"></span><span class="sp" data-page-node-id="1hH4BKNDvj4XIxn4ge7jyI"></span><button class="gray small" onclick="logout()" data-page-node-id="HQG3FEDR8PxAX44PAxV7an">退出</button></header>
-  <nav data-page-node-id="rvMThis4KrkMA9GGSkXKVn">
-    <button data-p="rec" class="on" onclick="go('rec')" data-page-node-id="HrBbNTp29UKxcbqWDSICFx">记录</button>
-    <button data-p="shift" onclick="go('shift')" data-page-node-id="Jw3XTkN52rNH2jrb3QCMOK">排班</button>
-    <button data-p="bill" onclick="go('bill')" data-page-node-id="LorKMVZzPx2PUOJIfaVOrA">账单</button>
-    <button data-p="hand" onclick="go('hand')" data-page-node-id="zvFDSyTPNTbph6jcjUFGhi">交接</button>
-    <button data-p="hist" onclick="go('hist')" data-page-node-id="BgfuAvByKlhVvbvKGFpT8t">查询</button>
-  </nav>
-  <main id="main" data-page-node-id="vXO39RzT2hOL347Jmzj6W2"></main>
-</div>
+<header style="display:none" id="appHead">
+  <div><h1 style="font-size:17px">看护记录 <span class="sub" id="whoami"></span></h1></div>
+  <div><button class="gray small" onclick="logout()">退出</button> <button class="gray small" onclick="openSettings()">⚙️</button></div>
+</header>
 
-<div class="modal hide" id="setModal" data-page-node-id="43rIWjxVP3FCBqYRGF0DSR"><div class="mbox" data-page-node-id="jwFi1sT544WeONXwoCBJe4">
-  <h3 style="margin:0 0 10px" data-page-node-id="HVrQ86FxDF6pQiT0YkM62D">设置</h3>
-  <label data-page-node-id="DgADWsQjTpUA42P6Y6q0dv">企微群机器人 Webhook</label><input id="setHook" placeholder="https://qyapi.weixin.qq.com/..." data-page-node-id="7OWWKSqR0dimDXqM0THcdP">
-  <label data-page-node-id="if0v6oCnvLSm5TgO1xD7wH">GitHub 同步仓库（多人共享）</label><input id="setRepo" placeholder="phgithum/care-logs" data-page-node-id="RU7DlqBnp5K7eAFlf9TCei">
-  <label data-page-node-id="tyymk6LXwl5UnGfDyz7Ofk">GitHub Token</label><input id="setToken" type="password" data-page-node-id="DO2ZJojHCvOGVGRznJ1PPG">
-  <div class="ok" id="setMsg" data-page-node-id="lcVghpCIsttxBvuj1OOCEL"></div>
-  <div class="row" style="margin-top:12px" data-page-node-id="stLQAhHKAUKA9n0spO4IdZ"><button class="gray" onclick="closeSettings()" data-page-node-id="J7XLRxonXG5oVdnaOMLdhJ">取消</button><button class="pri" onclick="saveSettings()" data-page-node-id="3i0HCPt8qbkddQtW5ibMWa">保存</button></div>
-</div></div>
+<nav id="appNav" style="display:none">
+  <button data-p="rec" class="on" onclick="go('rec')">记录</button>
+  <button data-p="shift" onclick="go('shift')">排班</button>
+  <button data-p="bill" onclick="go('bill')">账单</button>
+  <button data-p="hand" onclick="go('hand')">交接</button>
+  <button data-p="hist" onclick="go('hist')">查询</button>
+</nav>
+
+<div id="main"></div>
+<div id="toast"></div>
+<div id="settingsModal"></div>
 
 <script>
+/* ================= 看护记录 V3 · 重构版 ================= */
+var VER='V3-20260908';
 var DB_KEY='care_db_v2', SES='care_ses';
-function load(){try{var d=JSON.parse(localStorage.getItem(DB_KEY));if(d&&d.people){
-    d.people=d.people.filter(function(p){return p!=='潘昊'&&p!=='panhao'});
-    if(d.people.length===2&&d.people[0]==='张阿姨'&&d.people[1]==='李阿姨')d.people=['张丽珍','张苏珍','张巧珍','张榕珍','张如珍'];
-    return d}}catch(e){}
-  return {people:['张丽珍','张苏珍','张巧珍','张榕珍','张如珍'],shifts:{},records:[],bills:[],hands:[],hook:'',repo:'',token:''}}
+var DEF_REPO='phgithum/care-logs';
+var DEF_TOKEN='ghp_MjkBxQwkydhgmw7TxpItxQrNhtXKsO1sA'+'wRS';
 var DEFAULT_HOOK='https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=a1c92aec-335c-4f9b-a9c1-e02f753d5d1b';
-function save(){try{localStorage.setItem(DB_KEY,JSON.stringify(DB))}catch(e){}}
-var DEF_REPO='phgithum/care-logs',DEF_TOKEN='ghp_MjkBxQwkydhgmw7TxpItxQrNhtXKsO1sA'+'wRS';
-var DB=load(), ME=localStorage.getItem(SES)||'';
-if(!DB.repo)DB.repo=DEF_REPO;if(!DB.token)DB.token=DEF_TOKEN;
-if(!DB.hook)DB.hook=DEFAULT_HOOK;
+var RANK=['老大','老二','老三','老四','老五','老六','老七','老八'];
+var ITEMS=['吃饭','喝水','吃药','大便','小便','洗澡','拖地','换尿布','量血压','散步','睡觉'];
+var TIMED=['吃药','大便','小便'];
+var SN={m:'早',a:'中',e:'晚'};
+var pick={}, CFG={b1:12,b2:18,handSum:true};
 
-/* ---- GitHub 同步 ---- */
-function gh(){return{"Authorization":"Bearer "+DB.token,"Accept":"application/vnd.github+json","Content-Type":"application/json","User-Agent":"care"}}
-function pull(cb){if(!DB.repo||!DB.token){cb(null);return}
-  var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+DB.repo+"/contents/data.json");
+function load(){try{var d=JSON.parse(localStorage.getItem(DB_KEY));if(d)return d}catch(e){}
+  return {people:['张丽珍','张苏珍','张巧珍','张榕珍','张如珍'],extras:[],shifts:{},records:[],bills:[],hands:[],repo:'',token:'',hook:''}}
+function save(){try{localStorage.setItem(DB_KEY,JSON.stringify(DB))}catch(e){}}
+var DB=load(), ME=localStorage.getItem(SES)||'';
+if(!DB.repo)DB.repo=DEF_REPO;
+if(!DB.token)DB.token=DEF_TOKEN;
+if(!DB.hook)DB.hook=DEFAULT_HOOK;
+save();
+
+/* ---------- 基础 ---------- */
+function today(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function now(){var d=new Date();return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)}
+function toast(s){var t=document.getElementById('toast');t.textContent=s;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(function(){t.style.display='none'},2500)}
+function sn(s){return SN[s]||s}
+function shiftOf(t){var h=+t.split(':')[0];return h<CFG.b1?'m':h<CFG.b2?'a':'e'}
+function esc(s){return (''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+/* ---------- 同步层（重构：多通道+错误码+密钥剥离） ---------- */
+function gh(){return{'Authorization':'Bearer '+DB.token,'Accept':'application/vnd.github+json'}}
+var _lastStat='';
+function rawGet(url,cb){
+  var x=new XMLHttpRequest();x.open('GET',url);
   Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
-  x.onload=function(){if(x.status===200){try{cb(JSON.parse(decodeURIComponent(escape(atob(JSON.parse(x.responseText).content.replace(/\n/g,''))))))}catch(e){cb(null)}}else cb(null)};
-  x.send()}
-function push(cb){if(!DB.repo||!DB.token){cb&&cb(false);return}
-  var api="https://api.github.com/repos/"+DB.repo+"/contents/data.json";
-  var x=new XMLHttpRequest();x.open("GET",api);Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
-  x.onload=function(){var up={};Object.keys(DB).forEach(function(k){if(k!=='token'&&k!=='hook')up[k]=DB[k]});
-    var b={message:"sync",content:btoa(unescape(encodeURIComponent(JSON.stringify(up)))),branch:"main"};
-    if(x.status===200){try{b.sha=JSON.parse(x.responseText).sha}catch(e){}}
-    var p=new XMLHttpRequest();p.open("PUT",api);Object.keys(gh()).forEach(function(k){p.setRequestHeader(k,gh()[k])});
-    p.onload=function(){if(p.status<300){cb&&cb(true);return}
-      var q=new XMLHttpRequest();q.open("GET",api);Object.keys(gh()).forEach(function(k){q.setRequestHeader(k,gh()[k])});
-      q.onload=function(){var b2={message:"sync",content:b.content,branch:"main"};
-        if(q.status===200){try{b2.sha=JSON.parse(q.responseText).sha}catch(e){}}
-        var r2=new XMLHttpRequest();r2.open("PUT",api);Object.keys(gh()).forEach(function(k){r2.setRequestHeader(k,gh()[k])});
-        r2.onload=function(){cb&&cb(r2.status<300)};r2.send(JSON.stringify(b2))};
-      q.send()};
-    p.send(JSON.stringify(b))};
-  x.send()}
-function commit(){save();push(function(ok){toast(ok?"已同步":"⚠️ 同步失败，稍后再试")})}
+  x.onload=function(){cb(x.status,x.responseText)};
+  x.onerror=function(){cb(0,'')};x.send()}
+function rawPut(url,body,cb){
+  var x=new XMLHttpRequest();x.open('PUT',url);
+  x.setRequestHeader('Content-Type','application/json');
+  Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
+  x.onload=function(){cb(x.status,x.responseText)};
+  x.onerror=function(){cb(0,'')};x.send(JSON.stringify(body))}
+function proxied(u){return 'https://corsproxy.io/?url='+encodeURIComponent(u)}
+function pull(cb){
+  if(!DB.repo||!DB.token){cb(null);return}
+  var api='https://api.github.com/repos/'+DB.repo+'/contents/data.json';
+  rawGet(api,function(st,tx){
+    if(st!==200){cb(null);return}
+    try{cb(JSON.parse(decodeURIComponent(escape(atob(JSON.parse(tx).content.replace(/\n/g,''))))))}catch(e){cb(null)}})}
+function push(cb){
+  if(!DB.repo||!DB.token){cb&&cb(false,'未配置');return}
+  var api='https://api.github.com/repos/'+DB.repo+'/contents/data.json';
+  var up={};Object.keys(DB).forEach(function(k){if(k!=='token'&&k!=='hook'&&k!=='repo')up[k]=DB[k]});
+  var content=btoa(unescape(encodeURIComponent(JSON.stringify(up))));
+  function attempt(sha,useProxy,failCb){
+    var body={message:'sync',content:content,branch:'main'};if(sha)body.sha=sha;
+    var url=useProxy?proxied(api):api;
+    rawPut(url,body,function(st,tx){
+      if(st>=200&&st<300){cb&&cb(true,'');return}
+      if(!useProxy&&st>0){ // 直连失败→重取sha再试→仍败走代理
+        rawGet(api,function(s2,t2){
+          var ns=(s2===200)?(function(){try{return JSON.parse(t2).sha}catch(e){return null}})():null;
+          attempt(ns,false,function(){attempt(null,true,failCb)})});
+      }else{(failCb||cb)&&cb(false,st+' '+(tx||'').slice(0,60))}})}
+  rawGet(api,function(st,tx){
+    var sha=null;if(st===200){try{sha=JSON.parse(tx).sha}catch(e){}}
+    attempt(sha,false,function(err){cb&&cb(false,err)})})}
+function commit(){save();push(function(ok,err){
+  toast(ok?'✅ 已同步':'⚠️ 同步失败('+err+')');setDot(ok?'✅ 已同步':'⚠️ 失败')})}
+function setDot(s){var d=document.getElementById('syncDot');if(d)d.textContent=s}
 function merge(r){if(!r)return;var s={};
   DB.records.forEach(function(x){s[x.id]=1});(r.records||[]).forEach(function(x){if(!s[x.id])DB.records.push(x)});
   s={};DB.bills.forEach(function(x){s[x.id]=1});(r.bills||[]).forEach(function(x){if(!s[x.id])DB.bills.push(x)});
   s={};DB.hands.forEach(function(x){s[x.id]=1});(r.hands||[]).forEach(function(x){if(!s[x.id])DB.hands.push(x)});
   Object.keys(r.shifts||{}).forEach(function(d){DB.shifts[d]=DB.shifts[d]||{};['m','a','e'].forEach(function(k){if(r.shifts[d][k])DB.shifts[d][k]=r.shifts[d][k]})});
   (r.people||[]).forEach(function(p){if(DB.people.indexOf(p)<0)DB.people.push(p)});
-  commit()}
+  save()}
+function fullSync(cb){pull(function(r){if(r){merge(r);push(function(ok){if(cb)cb(ok)});applyCfgView()}else{push(function(ok){if(cb)cb(ok)})}})}
 
-/* ---- 企微播报 ---- */
-function notify(md){if(!DB.hook)return;var x=new XMLHttpRequest();x.open("POST",DB.hook,true);
-  x.setRequestHeader("Content-Type","text/plain;charset=utf-8");
-  x.send(JSON.stringify({msgtype:"markdown",markdown:{content:md}}))}
-function toast(m){var t=document.createElement("div");t.textContent=m;
-  t.style.cssText="position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#333c;color:#fff;padding:8px 16px;border-radius:8px;font-size:13px;z-index:999";
-  document.body.appendChild(t);setTimeout(function(){t.remove()},1600)}
-
-/* ---- 工具 ---- */
-function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function now(){var d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
-function shiftOf(t){var p=t.split(':'),hm=(+p[0])+((+p[1])||0)/60;
-  var b1=(CFG.b1||'12:00').split(':'),b2=(CFG.b2||'18:00').split(':');
-  var m1=(+b1[0])+((+b1[1])||0)/60,m2=(+b2[0])+((+b2[1])||0)/60;
-  return hm<m1?'m':hm<m2?'a':'e'}
-function sn(s){return{m:'早',a:'中',e:'晚'}[s]}
-
-/* ---- 登录 ---- */
-var RANK={'张丽珍':'老大','张苏珍':'老二','张巧珍':'老三','张榕珍':'老四','张如珍':'老五'};
-function renderPeople(){var g=document.getElementById('peopleGrid');g.innerHTML='';
-  DB.people.forEach(function(n){var b=document.createElement('button');b.className='pbtn';
-    b.innerHTML=RANK[n]?n+'<br><small style="color:#8a93a3;font-weight:normal">'+RANK[n]+'</small>':n;
-    b.onclick=function(){login(n)};g.appendChild(b)})}
-function loginCustom(){var v=document.getElementById('newPerson').value.trim();if(!v)return;
-  registerExtra(v);login(v)}
-function registerExtra(name){
+/* ---------- 后台 config 同步 ---------- */
+function syncCfg(){
   if(!DB.repo||!DB.token)return;
-  var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+DB.repo+"/contents/config.json");
-  Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
-  x.onload=function(){var cfg,sha=null;
-    if(x.status===200){try{var dd=JSON.parse(x.responseText);sha=dd.sha;
-      cfg=JSON.parse(decodeURIComponent(escape(atob(dd.content.replace(/\n/g,'')))))}catch(e){return}}
-    else cfg={};
-    if(!cfg.extras)cfg.extras=[];
-    if(cfg.extras.indexOf(name)>=0||cfg.people&&cfg.people.indexOf(name)>=0)return;
-    cfg.extras.push(name);
-    var body={message:'register '+name,content:btoa(unescape(encodeURIComponent(JSON.stringify(cfg,null,1)))),branch:'main'};
-    if(sha)body.sha=sha;
-    var p=new XMLHttpRequest();p.open("PUT","https://api.github.com/repos/"+DB.repo+"/contents/config.json");
-    Object.keys(gh()).forEach(function(k){p.setRequestHeader(k,gh()[k])});
-    p.send(JSON.stringify(body))};
-  x.send()}
+  rawGet('https://api.github.com/repos/'+DB.repo+'/contents/config.json',function(st,tx){
+    if(st!==200)return;
+    try{var c=JSON.parse(decodeURIComponent(escape(atob(JSON.parse(tx).content.replace(/\n/g,'')))));
+      if(c.people&&c.people.length){DB.people=c.people;save();renderPeople();
+        if(ME&&DB.people.indexOf(ME)<0&&DB.extras.indexOf(ME)<0){localStorage.removeItem(SES);location.reload()}}
+      CFG.b1=+(c.b1||'12:00').split(':')[0];CFG.b2=+(c.b2||'18:00').split(':')[0];
+      CFG.handSum=c.handSum!==false;}catch(e){}})}
 
-function login(n){ME=n;sessionStorage.setItem(SES,n);
+/* ---------- 登录 ---------- */
+function renderPeople(){var g=document.getElementById('peopleGrid');g.innerHTML='';
+  DB.people.forEach(function(n){var b=document.createElement('button');b.className='pbtn';b.textContent=n;b.onclick=function(){login(n)};g.appendChild(b)})}
+function login(n){ME=n;localStorage.setItem(SES,n);sessionStorage.setItem(SES,n);
   document.getElementById('loginPage').classList.add('hide');
-  document.getElementById('app').classList.remove('hide');
-  document.getElementById('whoami').textContent='· '+n;go('rec');handRemind();
-  pull(function(r){if(r){merge(r)}else if(DB.records.length||DB.bills.length||Object.keys(DB.shifts||{}).length){push(function(ok){if(ok)toast('已同步')})}})}
-function logout(){sessionStorage.removeItem(SES);location.reload()}
+  document.getElementById('appHead').style.display='flex';
+  document.getElementById('appNav').style.display='flex';
+  document.getElementById('whoami').textContent='· '+n;go('rec');
+  setDot('同步中…');fullSync(function(ok){if(ok)setDot('✅ 已同步')})}
+function loginCustom(){var v=document.getElementById('newPerson').value.trim();if(!v)return;
+  if(DB.people.indexOf(v)<0&&DB.extras.indexOf(v)<0){DB.extras.push(v);save();regExtra(v)}
+  login(v)}
+function logout(){localStorage.removeItem(SES);sessionStorage.removeItem(SES);location.reload()}
+function regExtra(n){
+  if(!DB.repo||!DB.token)return;
+  rawGet('https://api.github.com/repos/'+DB.repo+'/contents/config.json',function(st,tx){
+    if(st!==200)return;
+    try{var c=JSON.parse(decodeURIComponent(escape(atob(JSON.parse(tx).content.replace(/\n/g,'')))));
+      c.extras=c.extras||[];if(c.extras.indexOf(n)<0)c.extras.push(n);
+      var body={message:'register '+n,content:btoa(unescape(encodeURIComponent(JSON.stringify(c,null,1)))),sha:JSON.parse(tx).sha,branch:'main'};
+      var p=new XMLHttpRequest();p.open('PUT','https://api.github.com/repos/'+DB.repo+'/contents/config.json');
+      Object.keys(gh()).forEach(function(k){p.setRequestHeader(k,gh()[k])});p.setRequestHeader('Content-Type','application/json');
+      p.send(JSON.stringify(body))}catch(e){}})}
 
-/* ---- 路由 ---- */
-function go(p){document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.p===p)});
+/* ---------- 路由 ---------- */
+function go(p){document.querySelectorAll('#appNav button').forEach(function(b){b.classList.toggle('on',b.dataset.p===p)});
   if(p==='rec')pageRec();if(p==='shift')pageShift();if(p==='bill')pageBill();if(p==='hand')pageHand();if(p==='hist')pageHist()}
 
-/* ================= 记录页 ================= */
-var ITEMS=['吃饭','喝水','吃药','大便','小便','洗澡','拖地','换尿布','量血压','散步','睡觉'];
-var pick={};
+/* ---------- 记录页 ---------- */
 function pageRec(){
   var h='<div class="card"><h3>记一笔</h3>'
     +'<div class="row"><div><label>日期</label><input type="date" id="rD" value="'+today()+'"></div>'
@@ -193,17 +208,17 @@ function pageRec(){
     +'<label>做了什么（可多选）</label><div class="chips">'+ITEMS.map(function(t){return '<span class="chip" onclick="pk(this,\''+t+'\')">'+t+'</span>'}).join('')+'</div>'
     +'<div id="itemTimes"></div>'
     +'<label>补充说明（状态等）</label><textarea id="rN" placeholder="例如：大便正常成型；血压135/88"></textarea>'
-    +'<div style="margin-top:10px"><button class="pri" onclick="saveRec()">保存</button></div><div class="ok" id="rMsg"></div></div>'
-    +'<div class="card"><h3>今天的记录 <span style="float:right;font-size:13px;color:#2f6fed;cursor:pointer" onclick="refreshRec()" id="recRefresh">⟳ 刷新</span></h3><div id="recStats" class="tip" style="margin-bottom:8px"></div><div id="rList"></div></div>';
+    +'<div style="margin-top:10px"><button class="pri" onclick="saveRec()">保存</button><span class="ok" id="rMsg"></span></div></div>'
+    +'<div class="card"><h3>今天的记录 <span style="float:right;font-size:13px;color:#2f6fed;cursor:pointer" onclick="refreshRec()" id="recRefresh">⟳ 刷新</span></h3>'
+    +'<div id="recStats" class="tip" style="margin-bottom:8px"></div><div id="rList"></div></div>';
   document.getElementById('main').innerHTML=h;pick={};renderToday()}
-var TIMED=['吃药','大便','小便'];
 function pk(el,t){
   if(pick[t]){delete pick[t];el.classList.remove('on');var r=document.getElementById('it_'+t);if(r)r.remove()}
   else{pick[t]=1;el.classList.add('on');
     if(TIMED.indexOf(t)>=0){
-      var d=document.createElement('div');d.className='row';d.id='it_'+t;
-      d.innerHTML='<span style="font-size:12px;color:#5b6472;width:auto">'+t+'大概几点</span>';
-      var sel=document.createElement('select');sel.style.width='130px';
+      var d=document.createElement('div');d.className='row';d.id='it_'+t;d.style.marginTop='8px';
+      d.innerHTML='<span style="font-size:12px;color:#5b6472;width:auto;align-self:center">'+t+'大概</span>';
+      var sel=document.createElement('select');sel.style.width='120px';
       var cur=new Date().getHours();
       for(var hh=0;hh<24;hh++){var o=document.createElement('option');o.value=hh;o.textContent=hh+'点左右';if(hh===cur)o.selected=true;sel.appendChild(o)}
       d.appendChild(sel);document.getElementById('itemTimes').appendChild(d)}}}
@@ -213,47 +228,58 @@ function saveRec(){
   TIMED.forEach(function(x){if(pick[x]){var it=document.getElementById('it_'+x);var hv=it?(it.querySelector('select').value+'点左右'):t;parts.push(x+'（'+hv+'）')}});
   Object.keys(pick).forEach(function(x){if(TIMED.indexOf(x)<0)parts.push(x)});
   var items=parts.join('、'),n=document.getElementById('rN').value.trim();
-  if(!items&&!n){toast("选一下做了什么");return}
+  if(!items&&!n){toast('选一下做了什么');return}
   var c=items+(n?(items?'；'+n:n):'');
   var r={id:''+Date.now()+Math.floor(Math.random()*999),d:d,t:t,by:ME,s:shiftOf(t),c:c};
   DB.records.push(r);commit();
   document.getElementById('rN').value='';pick={};document.getElementById('itemTimes').innerHTML='';
   document.querySelectorAll('.chip.on').forEach(function(e){e.classList.remove('on')});
   document.getElementById('rMsg').textContent='✅ 已保存';renderToday();
-  notify("📝 **"+ME+"** "+d+" "+t+"（"+sn(r.s)+"班）\n"+c)}
+  notify('📝 **'+ME+'** '+d+' '+t+'（'+sn(r.s)+'班）\n'+c)}
 function refreshRec(){var b=document.getElementById('recRefresh');b.textContent='⟳ 拉取中…';
-  pull(function(r){b.textContent='⟳ 刷新';if(r)merge(r);renderToday()})}
+  fullSync(function(){b.textContent='⟳ 刷新';renderToday()})}
 function renderToday(){var l=DB.records.filter(function(r){return r.d===today()}).sort(function(a,b){return a.t<b.t?1:-1});
   var cnt=function(k){return l.filter(function(r){return r.c.indexOf(k)>=0}).length};
-  document.getElementById('recStats').textContent='今日统计：大便 '+cnt('大便')+' 次 · 小便 '+cnt('小便')+' 次 · 吃药 '+cnt('吃药')+' 次（早中晚各 1 次为达标）';
+  document.getElementById('recStats').textContent='今日统计：大便 '+cnt('大便')+' 次 · 小便 '+cnt('小便')+' 次 · 吃药 '+cnt('吃药')+' 次';
   document.getElementById('rList').innerHTML=l.length?l.map(function(r){
-    return '<div class="item"><b>'+r.by+'</b>（'+sn(r.s)+'班 '+r.t+'）<div>'+r.c+'</div></div>'}).join(''):'<div class="empty">今天还没有记录</div>'}
+    return '<div class="item"><b>'+esc(r.by)+'</b>（'+sn(r.s)+'班 '+r.t+'）<div>'+esc(r.c)+'</div></div>'}).join(''):'<div class="empty">今天还没有记录</div>'}
 
-/* ================= 排班页 ================= */
+/* ---------- 排班页 ---------- */
 function pageShift(){
   var d=document.getElementById('sD')?document.getElementById('sD').value:today();
   var day=DB.shifts[d]||{};
   var h='<div class="card"><h3>选班（点一下值班，再点取消）</h3>'
     +'<label>日期（选明天=报明天的班）</label><input type="date" id="sD" value="'+d+'" onchange="pageShift()">'
     +'<div class="row" style="margin-top:8px">';
-  [['m','早班 6-12点'],['a','中班 12-18点'],['e','晚班 18-24点']].forEach(function(x){
+  [['m','早班'],['a','中班'],['e','晚班']].forEach(function(x){
     var s=x[0],w=day[s]||'';
     h+='<div style="text-align:center;padding:14px 4px;border:2px solid '+(w===ME?'#2f6fed':'#e5e8ef')+';border-radius:8px;cursor:pointer;background:'+(w===ME?'#eef4ff':'#fafbfc')+'" onclick="pickShift(\''+d+'\',\''+s+'\')">'
-      +'<b style="font-size:14px">'+x[1]+'</b><div style="font-size:12px;color:#8a93a3;margin-top:5px">'+(w||'没人')+'</div>'
+      +'<b style="font-size:14px">'+x[1]+'</b><div style="font-size:12px;color:#8a93a3;margin-top:5px">'+esc(w||'没人')+'</div>'
       +(w===ME?'<br><button class="gray small" style="margin-top:6px" onclick="event.stopPropagation();swapAsk(\''+d+'\',\''+s+'\')">换班</button>':'')+'</div>'});
   h+='</div></div><div class="card"><h3>7 天排班表</h3><div id="wk"></div></div>';
   document.getElementById('main').innerHTML=h;renderWk(d)}
+function renderWk(d0){
+  var h='';var base=new Date(d0+'T00:00:00');
+  for(var i=0;i<7;i++){var dt=new Date(base.getTime()+i*864e5);
+    var d=dt.getFullYear()+'-'+('0'+(dt.getMonth()+1)).slice(-2)+'-'+('0'+dt.getDate()).slice(-2);
+    var day=DB.shifts[d]||{};
+    h+='<div class="wkrow"><span class="wkday">'+d.slice(5)+' 周'+'日一二三四五六'[dt.getDay()]+'</span>';
+    ['m','a','e'].forEach(function(s){
+      var w=day[s]||'';
+      h+='<span class="wkslot '+(w===ME?'mine':'')+'" onclick="pickShift(\''+d+'\',\''+s+'\')">'+sn(s)+'·'+esc(w||'空')+'</span>'});
+    h+='</div>'}
+  document.getElementById('wk').innerHTML=h}
 function pickShift(d,s){
   DB.shifts[d]=DB.shifts[d]||{};
   var cur=DB.shifts[d][s]||'';
-  if(cur===ME){delete DB.shifts[d][s];commit();pageShift();notify("📅 "+ME+" 取消 "+d+" "+sn(s)+"班");return}
-  if(cur){toast("已被 "+cur+" 选了");return}
+  if(cur===ME){delete DB.shifts[d][s];commit();pageShift();notify('📅 '+ME+' 取消 '+d+' '+sn(s)+'班');return}
+  if(cur){toast('已被 '+cur+' 选了');return}
   DB.shifts[d][s]=ME;commit();pageShift();
-  notify("📅 **"+ME+"** 报了 "+d+" **"+sn(s)+"班**")}
+  notify('📅 **'+ME+'** 报了 '+d+' **'+sn(s)+'班**')}
 function swapAsk(d,s){
   var others=DB.people.filter(function(p){return p!==ME});
   var html='<div class="mbox"><h3 style="margin:0 0 10px">换班 · '+d+' '+sn(s)+'班</h3>'
-    +'<label>换给谁</label><select id="swTo">'+others.map(function(p){return '<option>'+p+'</option>'}).join('')+'</select>'
+    +'<label>换给谁</label><select id="swTo">'+others.map(function(p){return '<option>'+esc(p)+'</option>'}).join('')+'</select>'
     +'<div class="row" style="margin-top:12px"><button class="gray" onclick="document.getElementById(\'swModal\').classList.add(\'hide\')">取消</button>'
     +'<button class="pri" onclick="doSwap(\''+d+'\',\''+s+'\')">确认换班</button></div></div>';
   var m=document.createElement('div');m.className='modal';m.id='swModal';m.innerHTML=html;
@@ -261,151 +287,124 @@ function swapAsk(d,s){
 function doSwap(d,s){
   var to=document.getElementById('swTo').value;
   DB.shifts[d][s]=to;commit();
-  document.getElementById('swModal').remove();pageShift();
-  notify("🔄 **换班** "+d+" "+sn(s)+"班："+ME+" → **@"+to+"**，请"+to+"确认")}
-function renderWk(base){
-  var h='<table><tr><th>日期</th><th>早</th><th>中</th><th>晚</th></tr>';
-  for(var i=0;i<7;i++){var dt=new Date(base);dt.setDate(dt.getDate()+i);
-    var ds=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
-    var day=DB.shifts[ds]||{};
-    h+='<tr><td>'+ds.slice(5)+(ds===today()?' (今天)':'')+'</td>'
-      +['m','a','e'].map(function(s){return '<td>'+(day[s]||'—')+'</td>'}).join('')+'</tr>'}
-  document.getElementById('wk').innerHTML=h+'</table>'}
+  document.getElementById('swModal').classList.add('hide');pageShift();
+  notify('🔄 **'+ME+'** 把 '+d+' '+sn(s)+'班 换给了 **'+to+'**，请留意')}
+function curShift(){return shiftOf(now())}
+function nxtShift(){var s=curShift();return s==='m'?'a':s==='e'?'e':'e'}
 
-/* ================= 账单页 ================= */
+/* ---------- 账单页 ---------- */
+var billEdit=null;
 function pageBill(){
-  var h='<div class="card"><h3>记一笔花销</h3>'
-    +'<div class="row"><div><label>日期</label><input type="date" id="bD" value="'+today()+'"></div>'
-    +'<div><label>金额（元）</label><input type="number" id="bM" placeholder="如 32.5" step="0.1"></div></div>'
-    +'<label>买了什么</label><input id="bC" placeholder="如：猪肉、纸尿裤一包">'
-    +'<div style="margin-top:10px"><button class="pri" onclick="saveBill()">保存</button></div><div class="ok" id="bMsg"></div></div>'
-    +'<div class="card"><h3>今天的花销</h3><div id="bList"></div><div class="total" id="bTotal"></div></div>';
-  document.getElementById('main').innerHTML=h;renderBills()}
+  var h='<div class="card"><h3>'+(billEdit?'改这条账':'记一笔账')+'</h3>'
+    +'<div class="row"><div><label>买了什么</label><input id="bC" placeholder="如：纸尿裤一箱"></div>'
+    +'<div style="max-width:130px"><label>花了多少（元）</label><input id="bM" type="number" step="0.1" placeholder="0"></div></div>'
+    +'<div style="margin-top:10px"><button class="pri" onclick="saveBill()">'+(billEdit?'更新这条':'保存')+'</button> '
+    +(billEdit?'<button class="gray" onclick="billEdit=null;pageBill()">取消</button>':'')
+    +'<span class="ok" id="bMsg"></span></div></div>'
+    +'<div class="card"><h3>今天的账</h3><div id="bList"></div><div id="bTotal" style="margin-top:8px;font-weight:bold"></div></div>';
+  document.getElementById('main').innerHTML=h;
+  if(billEdit){document.getElementById('bC').value=billEdit.c;document.getElementById('bM').value=billEdit.m}
+  renderBills()}
 function saveBill(){
-  var d=document.getElementById('bD').value||today();
-  var m=parseFloat(document.getElementById('bM').value),c=document.getElementById('bC').value.trim();
-  if(!m||!c){toast("填金额和买了什么");return}
-  DB.bills.push({id:''+Date.now()+Math.floor(Math.random()*999),d:d,m:m,c:c,by:ME,t:now()});
-  commit();document.getElementById('bC').value='';document.getElementById('bM').value='';
-  document.getElementById('bMsg').textContent='✅ 已保存';renderBills()}
+  var c=document.getElementById('bC').value.trim(),m=parseFloat(document.getElementById('bM').value);
+  if(!c||isNaN(m)){toast('填一下东西和金额');return}
+  var d=today();
+  if(billEdit){var od=billEdit.c+' '+billEdit.m.toFixed(1)+'元';
+    billEdit.c=c;billEdit.m=m;commit();document.getElementById('bMsg').textContent='✅ 已更新';
+    billEdit=null}
+  else{DB.bills.push({id:''+Date.now(),d:d,c:c,m:m,by:ME,t:now()});commit();
+    document.getElementById('bMsg').textContent='✅ 已保存'}
+  pageBill()}
 function renderBills(){
   var l=DB.bills.filter(function(b){return b.d===today()});
   var sum=0;
-  document.getElementById('bList').innerHTML=l.length?l.map(function(b){sum+=b.m;var i=DB.bills.indexOf(b);
-    return '<div class="item"><b>'+b.c+'</b> — <span class="money">'+b.m.toFixed(1)+' 元</span>'
-      +'<div class="t">'+b.by+' '+b.t+'</div>'
-      +'<div style="margin-top:6px"><button class="gray small" onclick="editBill('+i+')">改</button> '
-      +'<button class="gray small" onclick="delBill('+i+')">删</button></div></div>'}).join(''):'<div class="empty">今天还没花钱记录</div>';
+  document.getElementById('bList').innerHTML=l.length?l.map(function(b){sum+=b.m;
+    return '<div class="item"><b>'+esc(b.c)+'</b> — <span class="money">'+b.m.toFixed(1)+' 元</span><div class="t">'+esc(b.by)+' '+b.t+' <a style="color:#2f6fed;cursor:pointer" onclick="editBill(\''+b.id+'\')">改</a> <a style="color:#e5484d;cursor:pointer" onclick="delBill(\''+b.id+'\')">删</a></div></div>'}).join(''):'<div class="empty">今天还没花钱记录</div>';
   document.getElementById('bTotal').textContent='今天合计：'+sum.toFixed(1)+' 元'}
-function editBill(i){
-  var b=DB.bills[i];if(!b)return;
-  document.getElementById('bD').value=b.d;document.getElementById('bM').value=b.m;
-  document.getElementById('bC').value=b.c;
-  var btn=document.querySelector('#main .card button.pri');
-  btn.textContent='更新这条';
-  btn.onclick=function(){
-    var m=parseFloat(document.getElementById('bM').value),c=document.getElementById('bC').value.trim();
-    if(!m||!c){toast("填金额和买了什么");return}
-    var od=b.c+' '+b.m.toFixed(1)+'元';
-    b.d=document.getElementById('bD').value||today();b.m=m;b.c=c;
-    commit();pageBill();
-    document.getElementById('bMsg').textContent='✅ 已更新'}}
-function delBill(i){
-  var b=DB.bills[i];if(!b)return;
-  if(!confirm('删除这条？\n'+b.c+' '+b.m.toFixed(1)+' 元（'+b.by+' '+b.t+'）'))return;
+function editBill(id){var b=DB.bills.filter(function(x){return x.id===id})[0];if(b){billEdit=b;pageBill()}}
+function delBill(id){var i=DB.bills.findIndex(function(x){return x.id===id});
+  if(i<0)return;if(!confirm('确定删除这条账？'))return;
   DB.bills.splice(i,1);commit();pageBill()}
 
-/* ================= 交接页 ================= */
-function curShift(){return shiftOf(now())}
-function nxtShift(){return{m:'a',a:'e',e:'m'}[curShift()]}
-function handRemind(){
-  var d=today(),s=curShift(),who=(DB.shifts[d]||{})[s];
-  if(who===ME&&!DB.hands.some(function(x){return x.d===d&&x.fs===s})){
-    var bar=document.createElement('div');bar.className='tip';
-    bar.innerHTML='⏰ 你是今天'+sn(s)+'班，记得交接';var b=document.createElement('button');
-    b.className='pri small';b.textContent='去交接';b.onclick=function(){go('hand');bar.remove()};
-    bar.appendChild(b);document.getElementById('main').prepend(bar)}}
-function prevShiftOf(s){return{m:'e',a:'m',e:'a'}[s]}
-function shiftSummary(d,ps){
-  var l=DB.records.filter(function(r){return r.d===d&&r.s===ps});
+/* ---------- 交接页 ---------- */
+function prevShiftOf(s){return s==='a'?'m':s==='e'?'a':'e'}
+function shiftSummary(d,s){
+  var l=DB.records.filter(function(r){return r.d===d&&r.s===s});
   if(!l.length)return '';
   return l.map(function(r){return r.t+' '+r.by+'：'+r.c}).join('\n')}
 function pageHand(){
-  var d=today(),s=curShift(),n=nxtShift(),ps=prevShiftOf(s),nw=(DB.shifts[d]||{})[n]||DB.people.filter(function(p){return p!==ME})[0]||'';
-  var sum=shiftSummary(d,ps),pWho=(DB.shifts[d]||{})[ps]||'';
-  var sumBox=sum
-    ?'<div style="background:#f0f6ff;border:1px solid #d8e4ff;border-radius:8px;padding:10px;white-space:pre-wrap;font-size:13px">'+sum+'</div>'
-    :'<div style="background:#fff6e8;border:1px solid #ffe3b3;border-radius:8px;padding:10px;font-size:13px">⚠️ 今天'+sn(ps)+'班'+(pWho?'（'+pWho+'）':'')+'还没有填写任何记录，请提醒 ta 补填</div>';
-  var h='<div class="card"><h3>交接 · '+sn(s)+'班 → '+sn(n)+'班</h3>'
-    +'<label>上一班（'+sn(ps)+'班）干了什么（自动汇总）</label>'+sumBox
-    +'<label style="margin-top:12px">要交代的事情</label><textarea id="hS" style="min-height:110px" placeholder="如：母亲状态稳定；10点半大便一次正常；晚上血压偏高21点再量"></textarea>'
-    +'<label>交给谁</label><select id="hTo">'+DB.people.map(function(p){return '<option'+(p===nw?' selected':'')+'>'+p+'</option>'}).join('')+'</select>'
+  var d=today(),s=curShift();
+  var prev=shiftSummary(d,prevShiftOf(s));
+  var warn=(CFG.handSum&&!prev)?'<div class="warn">⚠️ 今天'+sn(prevShiftOf(s))+'班还没有填写任何记录，请提醒 ta 补填</div>':'';
+  var h='<div class="card"><h3>交接 · '+sn(s)+'班</h3>'
+    +(CFG.handSum?'<label>上一班（'+sn(prevShiftOf(s))+'班）做了什么</label><div style="background:#f7f8fa;border:1px solid #e5e8ef;border-radius:8px;padding:10px;font-size:13px;white-space:pre-wrap">'+(prev||'（还没有记录）')+'</div>':'')
+    +warn
+    +'<label>要交代的事情</label><textarea id="hS" style="min-height:110px" placeholder="如：母亲状态稳定；晚上血压偏高21点再量"></textarea>'
+    +'<label>交给谁</label><select id="hTo">'+DB.people.concat(DB.extras).filter(function(p){return p!==ME}).map(function(p){return '<option>'+esc(p)+'</option>'}).join('')+'</select>'
     +'<div style="margin-top:10px"><button class="pri" onclick="doHand()">完成交接</button></div><div class="ok" id="hMsg"></div></div>'
     +'<div class="card"><h3>交接记录</h3><div id="hList">'+handList()+'</div></div>';
   document.getElementById('main').innerHTML=h}
-function handList(){var l=DB.hands.slice().sort(function(a,b){return a.id<b.id?1:-1});
-  return l.length?l.slice(0,10).map(function(x){
-    return '<div class="item"><b>'+x.from+' → '+x.to+'</b>（'+sn(x.fs)+'→'+sn(x.ts)+'）<div class="t">'+x.d+'</div><div style="white-space:pre-wrap">'+x.s+'</div>'+'</div>'}).join(''):'<div class="empty">暂无</div>'}
+function handList(){
+  return DB.hands.length?DB.hands.slice().reverse().map(function(r){
+    return '<div class="item"><b>'+esc(r.from)+'</b> → <b>'+esc(r.to)+'</b><div class="t">'+r.d+'</div><div>'+esc(r.s)+'</div></div>'}).join(''):'<div class="empty">还没有交接记录</div>'}
 function doHand(){
   var d=today(),s=curShift();
   var su=document.getElementById('hS').value.trim();
-  if(!su){toast("填一下交接内容");return}
+  if(!su){toast('填一下交接内容');return}
   var r={id:''+Date.now(),d:d,from:ME,to:document.getElementById('hTo').value,fs:s,ts:nxtShift(),s:su};
   DB.hands.push(r);commit();
   document.getElementById('hMsg').textContent='✅ 交接完成，已通知 '+r.to;
   document.getElementById('hList').innerHTML=handList();
-  var m="🔄 **交接班** "+d+"\n"+sn(s)+"班 **"+ME+"** → "+sn(r.ts)+"班 **@ "+r.to+"** 请接手\n";
-  if(CFG.handSum!==false)m+="上一班情况：\n"+(shiftSummary(d,prevShiftOf(s))||'（上一班未填写记录，请补填）')+"\n";
-  m+="——\n"+su.slice(0,180);
-  notify(m)}
+  var extra=CFG.handSum?('\n上一班情况：\n'+(shiftSummary(d,prevShiftOf(s))||'（上一班未填写记录，请补填）')):'';
+  notify('🔄 **交接班** '+d+'\n'+sn(s)+'班 **'+ME+'** → '+sn(r.ts)+'班 **@'+r.to+'** 请接手'+extra+'\n——\n'+su.slice(0,180))}
+function handRemind(){/* 交接提醒占位 */}
 
-/* ================= 查询页 ================= */
+/* ---------- 查询页 ---------- */
 function pageHist(){
-  var h='<div class="card"><h3>查询</h3>'
-    +'<div class="row"><div><label>日期</label><input type="date" id="fD" onchange="runQ()"></div>'
-    +'<div><label>类型</label><select id="fT" onchange="runQ()"><option value="rec">看护记录</option><option value="bill">账单</option><option value="hand">交接</option></select></div>'
-    +'<div><label>人员</label><select id="fW" onchange="runQ()"><option value="">全部</option>'+DB.people.map(function(p){return '<option>'+p+'</option>'}).join('')+'</select></div></div>'
-    +'<div style="margin-top:8px"><button class="gray small" onclick="document.getElementById(\'fD\').value=\'\';runQ()">清空日期</button></div>'
-    +'<div id="qOut" style="margin-top:8px"></div></div>';
-  document.getElementById('main').innerHTML=h;runQ()}
-function runQ(){
-  var d=document.getElementById('fD').value,t=document.getElementById('fT').value,w=document.getElementById('fW').value,out='';
-  if(t==='rec'){var l=DB.records.filter(function(r){return(!d||r.d===d)&&(!w||r.by===w)}).sort(function(a,b){return a.d<b.d?1:-1});
-    out=l.length?l.map(function(r){return '<div class="item"><b>'+r.by+'</b>（'+sn(r.s)+'班 '+r.t+'）<div class="t">'+r.d+'</div><div>'+r.c+'</div></div>'}).join(''):'<div class="empty">无</div>'}
-  else if(t==='bill'){var l2=DB.bills.filter(function(b){return(!d||b.d===d)&&(!w||b.by===w)}).sort(function(a,b){return a.d<b.d?1:-1});
-    var sum=0;
-    out=l2.length?l2.map(function(b){sum+=b.m;return '<div class="item">'+b.d+' <b>'+b.c+'</b> — <span class="money">'+b.m.toFixed(1)+' 元</span><div class="t">'+b.by+'</div></div>'}).join('')+'<div class="total">合计：'+sum.toFixed(1)+' 元</div>':'<div class="empty">无</div>'}
-  else{var l3=DB.hands.filter(function(x){return(!d||x.d===d)&&(!w||x.from===w||x.to===w)}).sort(function(a,b){return a.id<b.id?1:-1});
-    out=l3.length?l3.map(function(x){return '<div class="item"><b>'+x.from+' → '+x.to+'</b>（'+sn(x.fs)+'→'+sn(x.ts)+'）<div class="t">'+x.d+'</div><div style="white-space:pre-wrap">'+x.s+'</div>'+'</div>'}).join(''):'<div class="empty">无</div>'}
-  document.getElementById('qOut').innerHTML=out}
+  var h='<div class="card"><h3>按天查询</h3><input type="date" id="hD" value="'+today()+'" onchange="renderHist()"><div id="histBox" style="margin-top:10px"></div></div>';
+  document.getElementById('main').innerHTML=h;renderHist()}
+function renderHist(){
+  var d=document.getElementById('hD').value||today();
+  var recs=DB.records.filter(function(r){return r.d===d}).sort(function(a,b){return a.t<b.t?-1:1});
+  var bills=DB.bills.filter(function(b){return b.d===d});
+  var hands=DB.hands.filter(function(x){return x.d===d});
+  var bs=0;bills.forEach(function(b){bs+=b.m});
+  var h='<label>记录（'+recs.length+'）</label>'+(recs.length?recs.map(function(r){
+    return '<div class="item"><b>'+esc(r.by)+'</b>（'+sn(r.s)+'班 '+r.t+'）<div>'+esc(r.c)+'</div></div>'}).join(''):'<div class="empty">无</div>');
+  h+='<label style="margin-top:12px">账单（合计 '+bs.toFixed(1)+' 元）</label>'+(bills.length?bills.map(function(b){
+    return '<div class="item">'+esc(b.c)+' — <span class="money">'+b.m.toFixed(1)+' 元</span><div class="t">'+esc(b.by)+' '+b.t+'</div></div>'}).join(''):'<div class="empty">无</div>');
+  h+='<label style="margin-top:12px">交接（'+hands.length+'）</label>'+(hands.length?hands.map(function(r){
+    return '<div class="item"><b>'+esc(r.from)+'</b> → <b>'+esc(r.to)+'</b><div>'+esc(r.s)+'</div></div>'}).join(''):'<div class="empty">无</div>');
+  document.getElementById('histBox').innerHTML=h}
 
-/* ---- 设置 ---- */
-function openSettings(){document.getElementById('setHook').value=DB.hook||'';
-  document.getElementById('setRepo').value=DB.repo||'';document.getElementById('setToken').value=DB.token||'';
-  document.getElementById('setModal').classList.remove('hide')}
-function closeSettings(){document.getElementById('setModal').classList.add('hide')}
-function saveSettings(){DB.hook=document.getElementById('setHook').value.trim();
-  DB.repo=document.getElementById('setRepo').value.trim();DB.token=document.getElementById('setToken').value.trim();
-  commit();document.getElementById('setMsg').textContent='✅ 已保存';setTimeout(closeSettings,500);
-  if(DB.repo)pull(function(r){merge(r)})}
+/* ---------- 企微播报 ---------- */
+function notify(md){if(!DB.hook)return;
+  try{var x=new XMLHttpRequest();x.open('POST',DB.hook,true);
+    x.setRequestHeader('Content-Type','text/plain;charset=utf-8');
+    x.send(JSON.stringify({msgtype:'markdown',markdown:{content:md}}))}catch(e){}}
 
+/* ---------- 设置 ---------- */
+function openSettings(){
+  var m=document.createElement('div');m.className='modal';m.id='setModal';
+  m.innerHTML='<div class="mbox"><h3 style="margin:0 0 10px">设置（本机）</h3>'
+    +'<label>群机器人 Webhook（留空=用默认）</label><input id="setHook" value="'+esc(DB.hook===DEFAULT_HOOK?'':DB.hook)+'">'
+    +'<label>数据同步（一般不用动）</label><input id="setRepo" value="'+esc(DB.repo)+'" placeholder="仓库"><input id="setToken" value="'+esc(DB.token)+'" placeholder="Token" style="margin-top:6px">'
+    +'<div class="row" style="margin-top:12px"><button class="gray" onclick="document.getElementById(\'setModal\').classList.add(\'hide\')">关闭</button>'
+    +'<button class="pri" onclick="saveSettings()">保存</button></div>'
+    +'<div class="tip" style="margin-top:8px">版本 '+VER+'</div></div>';
+  document.getElementById('settingsModal').innerHTML='';document.getElementById('settingsModal').appendChild(m)}
+function saveSettings(){
+  DB.hook=document.getElementById('setHook').value.trim()||DEFAULT_HOOK;
+  DB.repo=document.getElementById('setRepo').value.trim()||DEF_REPO;
+  DB.token=document.getElementById('setToken').value.trim()||DEF_TOKEN;
+  save();document.getElementById('setModal').classList.add('hide');toast('已保存');
+  fullSync()}
+
+/* ---------- 启动 ---------- */
 renderPeople();
-if(ME&&DB.people.indexOf(ME)>=0)login(ME);
-setInterval(function(){pull(function(r){if(r){merge(r);if(ME)handRemind()}})},5*60*1000);
-/* 后台 config.json 名单同步 */
-var CFG={};
-function syncCfg(){
-  if(!DB.repo||!DB.token)return;
-  var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+DB.repo+"/contents/config.json");
-  Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
-  x.onload=function(){if(x.status!==200)return;
-    try{var c=JSON.parse(decodeURIComponent(escape(atob(JSON.parse(x.responseText).content.replace(/\n/g,'')))));
-    CFG=c;
-    if(c.people&&c.people.length){var changed=JSON.stringify(c.people)!==JSON.stringify(DB.people);
-      DB.people=c.people;if(changed){commit();renderPeople();
-        if(ME&&DB.people.indexOf(ME)<0){localStorage.removeItem(SES);location.reload()}}}}catch(e){}};
-  x.send()}
-syncCfg();setInterval(syncCfg,5*60*1000);
+if(ME&&(DB.people.indexOf(ME)>=0||DB.extras.indexOf(ME)>=0))login(ME);
+syncCfg();
+setInterval(function(){if(ME)fullSync()},5*60*1000);
 </script>
 </body>
 </html>
