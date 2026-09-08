@@ -1,26 +1,28 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="zh-CN" data-page-node-id="44uIfiDb0HFYUwTNkBEpHB">
+<head data-page-node-id="CpMHSknkbx5ktabTFbxiwB">
+<meta charset="UTF-8" data-page-node-id="05xL5AeWNDf76xaj4eFqNa">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="ookAvTKWGR8OpsAQmBA09r">
 <title>看护记录 · 后台</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f6f8;color:#1f2430;padding:16px;max-width:720px;margin:0 auto}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f6f8;color:#1f2430;padding:16px;max-width:760px;margin:0 auto}
 h1{font-size:20px;margin-bottom:4px}
 .sub{color:#8a93a3;font-size:13px;margin-bottom:16px}
 .card{background:#fff;border:1px solid #e5e8ef;border-radius:10px;padding:14px;margin-bottom:14px}
 .card h3{font-size:15px;margin-bottom:10px}
 label{display:block;font-size:12px;color:#5b6472;margin:8px 0 4px}
 input[type=text],input[type=password],input[type=time],textarea{width:100%;padding:9px 10px;border:1px solid #dfe3ea;border-radius:8px;font-size:14px;background:#fafbfc}
-textarea{min-height:64px;resize:vertical}
+textarea{min-height:60px;resize:vertical}
 button{border:none;border-radius:8px;padding:9px 16px;font-size:14px;cursor:pointer}
 .pri{background:#2f6fed;color:#fff}
 .gray{background:#eef0f4;color:#3a4150}
 .small{padding:5px 10px;font-size:12px}
-.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-.row input[type=time]{width:110px}
-.row textarea{flex:1}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.row input[type=time]{width:100px;flex:none}
+.row textarea{flex:1;min-width:180px}
+.row select{padding:8px;border:1px solid #dfe3ea;border-radius:8px;font-size:13px;background:#fff}
+.row input.atv{width:150px;flex:none;display:none}
 .ok{color:#1a9e55;font-size:13px;margin-top:8px;min-height:18px}
 .err{color:#e5484d;font-size:13px;margin-top:8px}
 #gate{position:fixed;inset:0;background:#f5f6f8;display:flex;align-items:center;justify-content:center;z-index:10}
@@ -29,56 +31,64 @@ button{border:none;border-radius:8px;padding:9px 16px;font-size:14px;cursor:poin
 .hide{display:none!important}
 </style>
 </head>
-<body>
+<body data-page-node-id="ZspaX9EbaxdyZhCa8mZTFL">
 
-<div id="gate">
-  <div class="gbox">
-    <h1 style="margin-bottom:8px">看护后台</h1>
-    <input type="password" id="gpwd" placeholder="后台密码" onkeydown="if(event.key==='Enter')tryGate()">
-    <div style="margin-top:10px"><button class="pri" onclick="tryGate()">进入</button></div>
-    <div class="err" id="gmsg"></div>
+<div id="gate" data-page-node-id="MtzsXzIE3I5Hqvwf1GjAwH">
+  <div class="gbox" data-page-node-id="3gNPtmVTl21AixY41YEipi">
+    <h1 style="margin-bottom:8px" data-page-node-id="oMiWHrIuy25xFdSJg4wIDC">看护后台</h1>
+    <input type="password" id="gpwd" placeholder="后台密码" onkeydown="if(event.key==='Enter')tryGate()" data-page-node-id="BrBGyqtcbv6udtYD6oJraz">
+    <div style="margin-top:10px" data-page-node-id="P6NfkbxDyxV7uHd7TfVk7c"><button class="pri" onclick="tryGate()" data-page-node-id="99Ji1eonzG7Nxl441vPRoa">进入</button></div>
+    <div class="err" id="gmsg" data-page-node-id="BELjtrMGX2dxAhEk7xI8Jm"></div>
   </div>
 </div>
 
-<div id="app" class="hide">
-  <h1>看护记录 · 后台</h1>
-  <p class="sub">改完点保存，全组生效（约 1 分钟内）</p>
+<div id="app" class="hide" data-page-node-id="QH9RdPaSxgsx1Jap4e6F8G">
+  <h1 data-page-node-id="UkTF5MelYVWOEe2CdF2kG7">看护记录 · 后台</h1>
+  <p class="sub" data-page-node-id="4wGH7Qw34NKG9obq2f4nXv">改完点保存，全组生效（约 1 分钟内）</p>
 
-  <div class="card">
-    <h3>① GitHub 连接</h3>
-    <label>仓库 Token（只需填一次，存本机）</label>
-    <input type="password" id="cfgToken" placeholder="ghp_...">
-    <div class="tip">用于读写 care-logs 仓库的 config.json</div>
+  <div class="card" data-page-node-id="IpfZ4cNwPHCS84aaJY5a0x">
+    <h3 data-page-node-id="UfqmcMcs7JNkYSkzenlxey">① GitHub 连接</h3>
+    <label data-page-node-id="kOvATRhmdpV3JFNTgAz5ab">仓库 Token（只需填一次，存本机）</label>
+    <input type="password" id="cfgToken" placeholder="ghp_..." data-page-node-id="y1OHwdTaHGerDpoI62vzgy">
+    <div class="tip" data-page-node-id="cFBT7K2pgSbQ8k1c00le3f">用于读写 care-logs 仓库的 config.json</div>
   </div>
 
-  <div class="card">
-    <h3>② 名单设置</h3>
-    <div id="peopleBox"></div>
-    <div class="tip">老大～老五按顺序显示；写错随时改，保存后所有人首页更新</div>
+  <div class="card" data-page-node-id="ANstjlVHVI3kCx1kOJsgsX">
+    <h3 data-page-node-id="9iwGpJNUmZzks6VNY1FEpx">② 名单设置</h3>
+    <div id="peopleBox" data-page-node-id="alMsrMQeE0WnCfWHvavFuD"></div>
+    <div class="tip" data-page-node-id="W84xjS5YxFNp90PbvNeHzq">老大～老五按顺序显示；保存后所有人首页名单自动更新</div>
   </div>
 
-  <div class="card">
-    <h3>③ 定时提醒（北京时间）</h3>
-    <div id="taskBox"></div>
-    <button class="gray small" onclick="addTask()">＋ 加一条提醒</button>
-    <div class="tip" style="margin-top:8px">发送时间可能有几分钟误差；消息里可换行</div>
+  <div class="card" data-page-node-id="MKFAfOI6YgZo5dAOs7hJcV">
+    <h3 data-page-node-id="Efu7kLJaDSNalWzHmaaNaz">③ 自动功能开关</h3>
+    <div class="row" data-page-node-id="890hnfXYVAZJIshwPkRJAu"><label style="margin:0;font-size:14px;color:#1f2430" data-page-node-id="E8Ghu7MNN5NixB34OHzO45"><input type="checkbox" id="cfgHandSum" checked data-page-node-id="Fn8sFZuEB4pEcc1Y9RCUAN"> 交接班播报自动汇总上一班记录（关掉则只发手填内容）</label></div>
   </div>
 
-  <div style="display:flex;gap:8px">
-    <button class="pri" style="flex:1" onclick="saveAll()">💾 保存全部</button>
-    <button class="gray" onclick="location.reload()">刷新</button>
+  <div class="card" data-page-node-id="fROMCItqRpIsHZCqF4T4zy">
+    <h3 data-page-node-id="u59MsxML7SYllPj1wXREEg">④ 定时提醒（北京时间）</h3>
+    <div id="taskBox" data-page-node-id="VarZ9aeGvZfQLw0P8U1hHv"></div>
+    <button class="gray small" onclick="addTask()" data-page-node-id="AmhP74gHgYE1ctV98WCVOm">＋ 加一条提醒</button>
+    <div class="tip" style="margin-top:8px" data-page-node-id="onE0htreTyECjiVAnmGNxT">发送时间可能有几分钟误差；消息里可换行；@手机号可填多个用逗号隔开</div>
   </div>
-  <div class="ok" id="msg"></div>
-  <div class="tip" style="margin:10px 0 30px">群机器人 Webhook 存在仓库 Secret 里（WECOM_WEBHOOK），改提醒内容不需要动它。回到看护记录：<a href="https://phgithum.github.io/care-logs/">phgithum.github.io/care-logs</a></div>
+
+  <div style="display:flex;gap:8px" data-page-node-id="6Yh3lvxUHuJU3SwFewXAvR">
+    <button class="pri" style="flex:1" onclick="saveAll()" data-page-node-id="7Bg1tIJkaynHIh4F1cOcvf">💾 保存全部</button>
+    <button class="gray" onclick="location.reload()" data-page-node-id="GNk7dQT0RE8Xx5WPMBKwFG">刷新</button>
+  </div>
+  <div class="ok" id="msg" data-page-node-id="huhxQBBzXt0e2jap1mzyan"></div>
+  <div class="tip" style="margin:10px 0 30px" data-page-node-id="CxEzN8jg28DQEwY7FKkstN">群机器人 Webhook 已存好，改提醒不用动它。回到看护记录：<a href="https://phgithum.github.io/care-logs/" data-page-node-id="fzyaFOFHDYoNDMStvDwyaf">phgithum.github.io/care-logs</a></div>
 </div>
 
 <script>
-var REPO='phgithum/care-logs', CFG='config.json', PWD='panhao123';
+var REPO='phgithum/care-logs', CFGFILE='config.json', PWD='panhao123';
 var RANKS=['老大','老二','老三','老四','老五','老六','老七','老八'];
-var CONFIG={people:['张丽珍','张苏珍','张巧珍','张榕珍','张如珍'],
-  tasks:[{t:'08:00',msg:'☀️ 早安提醒\n今天早班的人别忘了：早饭/吃药/量血压已记录到【看护记录】'},
-         {t:'15:00',msg:'🕐 下午提醒\n记得记录下午的护理情况（吃饭/小便/散步等），账单买了东西随手记一笔'},
-         {t:'21:00',msg:'🌙 晚间提醒\n今天晚班的人记得：\n1. 量晚间血压\n2. 在【看护记录】里完成交接班'}]};
+var CONFIG={people:['张丽珍','张苏珍','张巧珍','张榕珍','张如珍'],handSum:true,
+  tasks:[{t:'08:00',at:'all',msg:'☀️ 早安提醒\n今天早班的人别忘了：母亲的早饭/吃药/量血压记到【看护记录】里'},
+         {t:'12:30',at:'all',msg:'💊 午间吃药提醒\n记得给母亲吃中午的药，吃完在【看护记录】里勾“吃药”并填时间'},
+         {t:'15:00',at:'all',msg:'🕐 下午提醒\n记得记录下午的护理情况（吃饭/小便/散步等），买了东西随手记一笔账'},
+         {t:'18:00',at:'all',msg:'💊 晚间吃药提醒\n记得给母亲吃晚上的药，吃完在【看护记录】里勾“吃药”并填时间'},
+         {t:'20:30',at:'all',msg:'🚻 每日检查\n母亲今天大小便记够了吗（早中晚各一次）？没记的快去【看护记录】补上'},
+         {t:'21:00',at:'all',msg:'🌙 晚间提醒\n今天晚班的人记得：\n1. 量晚间血压\n2. 在【看护记录】里完成交接班'}]};
 function tk(){return localStorage.getItem('care_admin_token')||''}
 function gh(){return{"Authorization":"Bearer "+tk(),"Accept":"application/vnd.github+json","Content-Type":"application/json","User-Agent":"care"}}
 function tryGate(){
@@ -89,10 +99,10 @@ function tryGate(){
   }else document.getElementById('gmsg').textContent='密码不对'}
 function init(){
   if(!tk()){document.getElementById('msg').textContent='先填上面 Token 再刷新';return}
-  var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+REPO+"/contents/"+CFG);
+  var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+REPO+"/contents/"+CFGFILE);
   Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
   x.onload=function(){
-    if(x.status===200){try{CONFIG=JSON.parse(decodeURIComponent(escape(atob(JSON.parse(x.responseText).content.replace(/\n/g,'')))))}catch(e){}}
+    if(x.status===200){try{CONFIG=JSON.parse(decodeURIComponent(escape(atob(JSON.parse(x.responseText).content.replace(/\n/g,'')))));if(!CONFIG.tasks)CONFIG.tasks=[]}catch(e){}}
     render()};
   x.send()}
 function render(){
@@ -102,32 +112,43 @@ function render(){
     d.innerHTML='<span style="font-size:12px;color:#8a93a3;width:34px">'+(RANKS[i]||'')+'</span>';
     var inp=document.createElement('input');inp.type='text';inp.value=n;inp.maxLength=10;
     d.appendChild(inp);pb.appendChild(d)});
+  document.getElementById('cfgHandSum').checked=CONFIG.handSum!==false;
   var tb=document.getElementById('taskBox');tb.innerHTML='';
   CONFIG.tasks.forEach(function(t,i){
     var d=document.createElement('div');d.className='row';
-    var tm=document.createElement('input');tm.type='time';tm.value=t.t;
-    var ta=document.createElement('textarea');ta.value=t.msg;
+    var tm=document.createElement('input');tm.type='time';tm.value=t.t||'08:00';
+    var sel=document.createElement('select');
+    var at=str(t.at===undefined?'all':t.at);
+    sel.innerHTML='<option value="all"'+(at==='all'?' selected':'')+'>@所有人</option><option value=""'+(at===''?' selected':'')+'>不@</option><option value="phone"'+(at!=='all'&&at!==''?' selected':'')+'>@手机号</option>';
+    var ph=document.createElement('input');ph.type='text';ph.className='atv';ph.placeholder='手机号,逗号隔开';ph.value=(at!=='all'&&at!=='')?at:'';
+    function syncPh(){ph.style.display=sel.value==='phone'?'block':'none'}
+    sel.onchange=syncPh;syncPh();
+    var ta=document.createElement('textarea');ta.value=t.msg||'';
     var del=document.createElement('button');del.className='gray small';del.textContent='删';
     del.onclick=function(){CONFIG.tasks.splice(i,1);render()};
-    d.appendChild(tm);d.appendChild(ta);d.appendChild(del);tb.appendChild(d)})}
-function addTask(){CONFIG.tasks.push({t:'12:00',msg:'提醒内容'});render()}
+    d.appendChild(tm);d.appendChild(sel);d.appendChild(ph);d.appendChild(ta);d.appendChild(del);tb.appendChild(d)})}
+function str(v){return v===null||v===undefined?'':''+v}
+function addTask(){CONFIG.tasks.push({t:'12:00',at:'all',msg:'提醒内容'});render()}
 function saveAll(){
   var names=[].map.call(document.querySelectorAll('#peopleBox input'),function(i){return i.value.trim()}).filter(Boolean);
   if(!names.length){document.getElementById('msg').textContent='名单不能为空';return}
   localStorage.setItem('care_admin_token',document.getElementById('cfgToken').value.trim());
-  var rows=document.querySelectorAll('#taskBox .row');
   CONFIG.people=names;
-  CONFIG.tasks=[].map.call(rows,function(r){
-    return{t:r.querySelector('input').value||'08:00',msg:r.querySelector('textarea').value.trim()||'提醒'}});
+  CONFIG.handSum=document.getElementById('cfgHandSum').checked;
+  CONFIG.tasks=[].map.call(document.querySelectorAll('#taskBox .row'),function(r){
+    var at=r.querySelector('select').value, ph=r.querySelector('.atv').value.trim();
+    return{t:r.querySelector('input[type=time]').value||'08:00',
+           at:at==='phone'?(ph||'all'):at,
+           msg:r.querySelector('textarea').value.trim()||'提醒'}});
   var body={message:'update config',content:btoa(unescape(encodeURIComponent(JSON.stringify(CONFIG,null,1)))),branch:'main'};
-  var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+REPO+"/contents/"+CFG);
+  var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+REPO+"/contents/"+CFGFILE);
   Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
   x.onload=function(){
     if(x.status===200){try{body.sha=JSON.parse(x.responseText).sha}catch(e){}}
-    var p=new XMLHttpRequest();p.open("PUT","https://api.github.com/repos/"+REPO+"/contents/"+CFG);
+    var p=new XMLHttpRequest();p.open("PUT","https://api.github.com/repos/"+REPO+"/contents/"+CFGFILE);
     Object.keys(gh()).forEach(function(k){p.setRequestHeader(k,gh()[k])});
     p.onload=function(){
-      document.getElementById('msg').textContent=(p.status===200)?'✅ 已保存，全组约 1 分钟内生效':'❌ 保存失败('+p.status+') 检查 Token'};
+      document.getElementById('msg').textContent=(p.status===200)?'✅ 已保存，约 1 分钟内全组生效':'❌ 保存失败('+p.status+') 检查 Token'};
     p.send(JSON.stringify(body))};
   x.send()}
 </script>
