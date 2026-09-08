@@ -85,7 +85,7 @@ td,th{padding:6px 4px;text-align:left;border-bottom:1px solid #eef0f4}
 <script>
 var DB_KEY='care_db_v2', SES='care_ses';
 function load(){try{var d=JSON.parse(localStorage.getItem(DB_KEY));if(d&&d.people){
-    d.people=d.people.filter(function(p){return p!=='潘昊'});
+    d.people=d.people.filter(function(p){return p!=='潘昊'&&p!=='panhao'});
     if(d.people.length===2&&d.people[0]==='张阿姨'&&d.people[1]==='李阿姨')d.people=['张丽珍','张苏珍','张巧珍','张榕珍','张如珍'];
     return d}}catch(e){}
   return {people:['张丽珍','张苏珍','张巧珍','张榕珍','张如珍'],shifts:{},records:[],bills:[],hands:[],hook:'',repo:'',token:''}}
