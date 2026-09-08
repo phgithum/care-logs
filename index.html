@@ -20,12 +20,12 @@ input,select,textarea{width:100%;padding:9px 10px;border:1px solid #dfe3ea;borde
 textarea{min-height:60px;resize:vertical}
 .row{display:flex;gap:8px}
 .row>div{flex:1}
-button{border:none;border-radius:8px;padding:10px 16px;font-size:14px;cursor:pointer;font-family:inherit}
+button{border:none;border-radius:10px;padding:14px 22px;font-size:16px;cursor:pointer;font-family:inherit}
 .pri{background:#2f6fed;color:#fff}
 .gray{background:#eef0f4;color:#3a4150}
-.small{padding:5px 10px;font-size:12px}
+.small{padding:8px 14px;font-size:13px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{padding:7px 12px;border:1px solid #dfe3ea;border-radius:20px;font-size:13px;background:#fafbfc;cursor:pointer}
+.chip{padding:10px 16px;border:1px solid #dfe3ea;border-radius:22px;font-size:15px;background:#fafbfc;cursor:pointer}
 .chip.on{background:#2f6fed;border-color:#2f6fed;color:#fff}
 .item{border-bottom:1px solid #f0f2f6;padding:9px 0;font-size:14px}
 .item:last-child{border-bottom:none}
@@ -234,11 +234,16 @@ function saveRec(){
   var items=parts.join('、'),n=document.getElementById('rN').value.trim();
   if(!items&&!n){toast('选一下做了什么');return}
   var c=items+(n?(items?'；'+n:n):'');
+  if(recEdit&&!items){c=n;recEdit.d=d;recEdit.t=t;recEdit.c=c;commit();
+    document.getElementById('rMsg').textContent='✅ 已更新';recEdit=null;renderToday();
+    notify('✏️ **'+ME+'** 更新了一条记录：'+c.slice(0,120));return}
   var r={id:''+Date.now()+Math.floor(Math.random()*999),d:d,t:t,by:ME,s:shiftOf(t),c:c};
   DB.records.push(r);commit();
   document.getElementById('rN').value='';pick={};document.getElementById('itemTimes').innerHTML='';
   document.querySelectorAll('.chip.on').forEach(function(e){e.classList.remove('on')});
-  document.getElementById('rMsg').textContent='✅ 已保存';renderToday();
+  document.getElementById('rMsg').textContent='✅ 已保存';
+  var bb=document.querySelector('#main .pri');if(bb)bb.textContent='保存';
+  recEdit=null;renderToday();
   notify('📝 **'+ME+'** '+d+' '+t+'（'+sn(r.s)+'班）\n'+c)}
 function refreshRec(){var b=document.getElementById('recRefresh');b.textContent='⟳ 拉取中…';
   fullSync(function(){b.textContent='⟳ 刷新';renderToday()})}
@@ -246,7 +251,17 @@ function renderToday(){var l=DB.records.filter(function(r){return r.d===today()}
   var cnt=function(k){return l.filter(function(r){return r.c.indexOf(k)>=0}).length};
   document.getElementById('recStats').textContent='今日统计：大便 '+cnt('大便')+' 次 · 小便 '+cnt('小便')+' 次 · 吃药 '+cnt('吃药')+' 次';
   document.getElementById('rList').innerHTML=l.length?l.map(function(r){
-    return '<div class="item"><b>'+esc(r.by)+'</b>（'+sn(r.s)+'班 '+r.t+'）<div>'+esc(r.c)+'</div></div>'}).join(''):'<div class="empty">今天还没有记录</div>'}
+    return '<div class="item"><b>'+esc(r.by)+'</b>（'+sn(r.s)+'班 '+r.t+'）<div>'+esc(r.c)+'</div><div class="t"><a style="color:#2f6fed;cursor:pointer" onclick="editRec(\''+r.id+'\')">改</a>　<a style="color:#e5484d;cursor:pointer" onclick="delRec(\''+r.id+'\')">删</a></div></div>'}).join(''):'<div class="empty">今天还没有记录</div>'}
+var recEdit=null;
+function editRec(id){var r=DB.records.filter(function(x){return x.id===id})[0];if(!r)return;
+  recEdit=r;go('rec');
+  document.getElementById('rD').value=r.d;document.getElementById('rT').value=r.t;
+  document.getElementById('rN').value=r.c;
+  var b=document.querySelector('#main .pri');if(b)b.textContent='更新这条';
+  document.getElementById('rMsg').textContent='正在修改这条记录，改完点更新'}
+function delRec(id){var i=DB.records.findIndex(function(x){return x.id===id});
+  if(i<0)return;if(!confirm('确定删除这条记录？'))return;
+  DB.records.splice(i,1);commit();renderToday();toast('已删除')}
 
 /* ---------- 排班页 ---------- */
 function pageShift(){
