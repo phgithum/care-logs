@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="VBtsUmxI4QxnJHkbeiSFS9">
+<head data-page-node-id="qcq1pFZpBu2CRaUYFE9lbl">
+<meta charset="UTF-8" data-page-node-id="kHAjRH2euOf45r2hISAeV2">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="P6WQLQNN9AEafkql0AXanA">
+<title>安心看护 · 协作记账系统</title>
+<style>
+:root{--main:#2f6fed;--bg:#f5f7fa;--line:#e5e8ef;--txt:#2b2f36;--sub:#8a93a3;--ok:#1a9e5c;--warn:#e6a23c;--danger:#d33}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+body{background:var(--bg);color:var(--txt);font-size:15px}
+.hide{display:none!important}
+/* ===== 登录页 ===== */
+#loginPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:36px 30px;width:100%;max-width:380px;box-shadow:0 6px 24px rgba(0,0,0,.06)}
+.login-box h1{font-size:20px;text-align:center;margin-bottom:6px}
+.login-box p{font-size:12px;color:var(--sub);text-align:center;margin-bottom:22px}
+.people-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.pbtn{padding:12px 8px;border:1px solid var(--line);border-radius:10px;background:#fafbfc;font-size:14px;cursor:pointer;text-align:center;transition:.15s}
+.pbtn:hover{border-color:var(--main);color:var(--main)}
+.pbtn .role{display:block;font-size:11px;color:var(--sub);margin-top:2px}
+.addrow{display:flex;gap:8px;margin-bottom:10px}
+.addrow input{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;outline:none}
+.addrow button,.btn{padding:10px 16px;border:none;border-radius:8px;background:var(--main);color:#fff;font-size:14px;cursor:pointer}
+.btn.gray{background:#eef1f6;color:var(--txt)}
+.btn.small{padding:6px 12px;font-size:12px}
+.linkline{text-align:center;margin-top:14px}
+.linkline a{font-size:12px;color:var(--sub);cursor:pointer}
+/* ===== 主框架 ===== */
+header{background:#fff;border-bottom:1px solid var(--line);padding:12px 18px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10}
+header b{font-size:16px}
+header .who{font-size:13px;color:var(--sub)}
+header .sp{flex:1}
+nav{display:flex;background:#fff;border-bottom:1px solid var(--line);overflow-x:auto}
+nav button{flex:1;min-width:88px;padding:12px 4px;border:none;background:none;font-size:14px;color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+nav button.on{color:var(--main);border-bottom-color:var(--main);font-weight:600}
+main{max-width:860px;margin:0 auto;padding:16px 14px 60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.card h3{font-size:15px;margin-bottom:12px}
+label{display:block;font-size:12px;color:var(--sub);margin:10px 0 4px}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;outline:none;background:#fff}
+textarea{min-height:90px;resize:vertical}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:8px;background:#eef4ff;color:var(--main);margin-right:6px}
+.tag.m{background:#fff7e8;color:#c07b00}.tag.e{background:#f0eaff;color:#6742d6}
+.tipbar{background:#fff8e6;border:1px solid #f5d98a;color:#8a6100;border-radius:10px;padding:12px 14px;font-size:13px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.tipbar button{margin-left:auto}
+.list-item{border-bottom:1px solid var(--line);padding:12px 2px}
+.list-item:last-child{border-bottom:none}
+.li-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.li-top b{font-size:14px}
+.li-time{font-size:12px;color:var(--sub);margin-left:auto}
+.li-body{font-size:14px;line-height:1.6}
+.li-sub{font-size:12px;color:var(--sub);margin-top:4px}
+.shiftbtns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.shiftbtn{padding:18px 6px;border:1px solid var(--line);border-radius:10px;background:#fafbfc;text-align:center;cursor:pointer}
+.shiftbtn b{display:block;font-size:15px}
+.shiftbtn span{font-size:11px;color:var(--sub)}
+.shiftbtn.mine{border-color:var(--main);background:#eef4ff}
+.shiftbtn.taken{opacity:.55}
+.empty{text-align:center;color:var(--sub);font-size:13px;padding:26px 0}
+.okmsg{color:var(--ok);font-size:12px;margin-top:8px;min-height:16px}
+.filterbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.filterbar input,.filterbar select{width:auto;flex:1;min-width:120px}
+/* 模态 */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:99;padding:20px}
+.modal-box{background:#fff;border-radius:12px;padding:22px;width:100%;max-width:400px;max-height:85vh;overflow:auto}
+@media (max-width:520px){.people-grid{grid-template-columns:1fr 1fr}.shiftbtns{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page-node-id="4XCLP0dxGqJfGUkUovYJC8">
+
+<!-- ===== 登录页 ===== -->
+<div id="loginPage" data-page-node-id="lHzZBfL0v38TCUhacmoS70">
+  <div class="login-box" data-page-node-id="or1SecBu963T3vlsqGlEHi">
+    <h1 data-page-node-id="ZbMzNkFzSY1NNTqvOHrw3y">🏠 安心看护</h1>
+    <p data-page-node-id="sVE4Y22jWZNKrG9dkBR2j4">多人协作看护记账 · 点击名字直接进入</p>
+    <div class="people-grid" id="peopleGrid" data-page-node-id="QnR1bQxRyHdfaa5ZlAzIqc"></div>
+    <div class="addrow" data-page-node-id="FTlBJMsheORJw2N1E0m9EK">
+      <input id="newPerson" placeholder="新看护人员名字" maxlength="10" data-page-node-id="BeeSxkrsKpcRDsZncKCAiL">
+      <button onclick="addPerson()" data-page-node-id="5i20n5nKqMUpB2r5LH1GUE">添加人员</button>
+    </div>
+    <div class="linkline" data-page-node-id="ORGOCZU8mRJaCspxZgS7Bo"><a onclick="openSettings()" data-page-node-id="s7obRLLRgRUW71LACDQhyH">⚙️ 系统设置（数据同步 / 微信机器人）</a></div>
+  </div>
+</div>
+
+<!-- ===== 主界面 ===== -->
+<div id="app" class="hide" data-page-node-id="HFFmi5cFmFhMAAD5TmGYge">
+  <header data-page-node-id="pJ6X4JaBnXdW8hxC1v3XJR">
+    <b data-page-node-id="K8VTF93nxzAm1tClHFTNQZ">🏠 安心看护</b>
+    <span class="who" id="whoami" data-page-node-id="9f2GhDzCr1hAZbASrnVui9"></span>
+    <span class="sp" data-page-node-id="CNbcC3zKiT7Bofol6bHZo8"></span>
+    <button class="btn gray small" onclick="logout()" data-page-node-id="yFuKg7K9lqHGGwJUdpcgwH">退出</button>
+  </header>
+  <nav data-page-node-id="qRt1YFqBaxlLfznGcQAf2Q">
+    <button data-p="record" class="on" onclick="go('record')" data-page-node-id="gkPicvCASiG25bTDML16CU">📝 看护记录</button>
+    <button data-p="shift" onclick="go('shift')" data-page-node-id="ZDC6svtGd1xAzI3qd8f86S">📅 排班选班</button>
+    <button data-p="handover" onclick="go('handover')" data-page-node-id="d54AWRSkuUTGo5OU1jExyz">🔄 交接班</button>
+    <button data-p="history" onclick="go('history')" data-page-node-id="3pQCNYKNZ7Laz4tw15FbXy">📋 账单查询</button>
+  </nav>
+  <main id="main" data-page-node-id="dEDk5eeT2DPFGvJy9r9135"></main>
+</div>
+
+<!-- 设置模态 -->
+<div class="modal hide" id="setModal" data-page-node-id="O3aFbCAq0je1I2LXxczCEU">
+  <div class="modal-box" data-page-node-id="oEM57M7Yl5SPQDJ1nOc5FT">
+    <h3 style="margin-bottom:12px" data-page-node-id="IPeIRIpMXfjNQPmkfJurjo">⚙️ 系统设置</h3>
+    <label data-page-node-id="O5MCdVATn8mXVxQ7FN4cDV">企业微信机器人 Webhook（选填，填了自动播报）</label>
+    <input id="setHook" placeholder="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=..." data-page-node-id="E0QPXhbHmJfFK5KnGNs61k">
+    <label data-page-node-id="CzMQLRRyJBdSxkzM7rvhJG">GitHub 同步仓库（多人共享数据，选填）</label>
+    <div class="row" data-page-node-id="QWQJozJWccDGY0r3iVXDJI">
+      <input id="setRepo" placeholder="如 phgithum/care-logs" data-page-node-id="PcdRBisAzW6f6qrySJCxT7">
+      <input id="setToken" placeholder="GitHub Token" type="password" data-page-node-id="V9qEACNZoUtK7u2wrmYqtw">
+    </div>
+    <p style="font-size:11px;color:var(--sub);margin-top:6px" data-page-node-id="oI2IhXJAJXjMu3AeBa1NO1">填写后数据自动同步到该仓库 data.json，全员共享；不填则仅保存在本机。</p>
+    <div class="okmsg" id="setMsg" data-page-node-id="8j41QqtuMYyrqGzqDxuOFu"></div>
+    <div class="row" style="margin-top:14px" data-page-node-id="JadNkIFiAIqZ9S2ERafyRp">
+      <button class="btn gray" onclick="closeSettings()" data-page-node-id="99il1NgDb18r4o0OQuAUiH">取消</button>
+      <button class="btn" onclick="saveSettings()" data-page-node-id="1zBeICkPrXdNaxeGhDiPBS">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================== 数据层 ================== */
+var DB_KEY='care_db_v1', SES_KEY='care_session', SYNC_LOCK=false;
+var DEF_PEOPLE=['张阿姨','李阿姨','王阿姨'];
+function loadDB(){
+  try{
+    var d=JSON.parse(localStorage.getItem(DB_KEY));
+    if(!d) throw 0;
+    if(!d.people) d.people=DEF_PEOPLE.slice();
+    return d;
+  }catch(e){
+    return {people:DEF_PEOPLE.slice(), shifts:{}, records:[], handovers:[], hook:'', repo:'', token:''};
+  }
+}
+function saveDB(db){ try{localStorage.setItem(DB_KEY,JSON.stringify(db))}catch(e){} }
+var DB=loadDB();
+var ME=sessionStorage.getItem(SES_KEY)||'';
+
+/* ---- GitHub 数据同步（多人共享） ---- */
+function ghHeaders(){ return {"Authorization":"Bearer "+DB.token,"Accept":"application/vnd.github+json","Content-Type":"application/json","User-Agent":"care-app"}; }
+function pullRemote(cb){
+  if(!DB.repo||!DB.token){cb(false);return;}
+  var xhr=new XMLHttpRequest();
+  xhr.open("GET","https://api.github.com/repos/"+DB.repo+"/contents/data.json");
+  Object.keys(ghHeaders()).forEach(function(k){xhr.setRequestHeader(k,ghHeaders()[k])});
+  xhr.onload=function(){
+    if(xhr.status===200){ try{cb(JSON.parse(decodeURIComponent(escape(atob(JSON.parse(xhr.responseText).content.replace(/\n/g,''))))));}catch(e){cb(false);} }
+    else cb(false);
+  };
+  xhr.onerror=function(){cb(false)};
+  xhr.send();
+}
+function pushRemote(db,cb){
+  if(!DB.repo||!DB.token){cb&&cb(false);return;}
+  var api="https://api.github.com/repos/"+DB.repo+"/contents/data.json";
+  var x=new XMLHttpRequest(); x.open("GET",api);
+  Object.keys(ghHeaders()).forEach(function(k){x.setRequestHeader(k,ghHeaders()[k])});
+  x.onload=function(){
+    var body={message:"care data sync",content:btoa(unescape(encodeURIComponent(JSON.stringify(db)))),branch:"main"};
+    if(x.status===200){ try{body.sha=JSON.parse(x.responseText).sha}catch(e){} }
+    else if(x.status!==404){cb&&cb(false);return;}
+    var p=new XMLHttpRequest(); p.open("PUT",api);
+    Object.keys(ghHeaders()).forEach(function(k){p.setRequestHeader(k,ghHeaders()[k])});
+    p.onload=function(){cb&&cb(p.status<300)};
+    p.send(JSON.stringify(body));
+  };
+  x.send();
+}
+/* 统一写入口：本地必存，远端尽力推 */
+function commit(){
+  saveDB(DB);
+  pushRemote(DB,function(ok){ if(ok) toast("已同步到云端"); });
+}
+function mergeRemote(remote){
+  if(!remote||!remote.records) return;
+  var seen={};
+  DB.records.forEach(function(r){seen[r.id]=1});
+  remote.records.forEach(function(r){ if(!seen[r.id]) DB.records.push(r); });
+  seen={}; DB.handovers.forEach(function(r){seen[r.id]=1});
+  remote.handovers.forEach(function(r){ if(!seen[r.id]) DB.handovers.push(r); });
+  var changed=false;
+  Object.keys(remote.shifts||{}).forEach(function(d){
+    if(!DB.shifts[d]) DB.shifts[d]={};
+    ['m','a','e'].forEach(function(s){
+      if(remote.shifts[d][s] && DB.shifts[d][s]!==remote.shifts[d][s]){ DB.shifts[d][s]=remote.shifts[d][s]; changed=true; }
+    });
+  });
+  if(remote.people) remote.people.forEach(function(p){ if(DB.people.indexOf(p)<0) DB.people.push(p); });
+  commit();
+}
+
+/* ================== 企业微信播报 ================== */
+function notify(md){
+  if(!DB.hook) return;
+  var x=new XMLHttpRequest();
+  x.open("POST",DB.hook,true);
+  x.setRequestHeader("Content-Type","text/plain;charset=utf-8");
+  x.send(JSON.stringify({msgtype:"markdown",markdown:{content:md}}));
+}
+function toast(msg){
+  var t=document.createElement("div");
+  t.textContent=msg;
+  t.style.cssText="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#333c;color:#fff;padding:8px 18px;border-radius:8px;font-size:13px;z-index:999";
+  document.body.appendChild(t);
+  setTimeout(function(){t.remove()},1800);
+}
+
+/* ================== 登录 ================== */
+function renderPeople(){
+  var g=document.getElementById('peopleGrid'); g.innerHTML='';
+  DB.people.forEach(function(name){
+    var b=document.createElement('button'); b.className='pbtn';
+    b.innerHTML=name+'<span class="role">看护人员</span>';
+    b.onclick=function(){ login(name) };
+    g.appendChild(b);
+  });
+}
+function addPerson(){
+  var v=document.getElementById('newPerson').value.trim();
+  if(!v) return;
+  if(DB.people.indexOf(v)>=0){ toast("已存在"); return; }
+  DB.people.push(v); commit(); renderPeople();
+  document.getElementById('newPerson').value='';
+  notify("👋 **"+v+"** 加入了看护组");
+}
+function login(name){
+  ME=name; sessionStorage.setItem(SES_KEY,name);
+  document.getElementById('loginPage').classList.add('hide');
+  document.getElementById('app').classList.remove('hide');
+  document.getElementById('whoami').textContent='当前：'+name;
+  go('record'); checkHandoverDue();
+}
+function logout(){ sessionStorage.removeItem(SES_KEY); location.reload(); }
+
+/* ================== 页面路由 ================== */
+function go(p){
+  document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.p===p)});
+  if(p==='record') pageRecord();
+  if(p==='shift') pageShift();
+  if(p==='handover') pageHandover();
+  if(p==='history') pageHistory();
+}
+
+/* ================== 看护记录页 ================== */
+var ITEMS=['洗澡','拖地','做饭','喂食','服药','量血压','测血糖','散步','换尿布','按摩','陪聊','购物'];
+function todayStr(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function nowTimeStr(){ var d=new Date(); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+function pageRecord(){
+  var h='<div class="card"><h3>📝 录入看护记录</h3>'
+    +'<div class="row"><div><label>日期</label><input type="date" id="rDate" value="'+todayStr()+'"></div>'
+    +'<div><label>时间</label><input type="time" id="rTime" value="'+nowTimeStr()+'"></div></div>'
+    +'<label>工作内容（点选可多选）</label><div id="itemTags" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px">'
+    +ITEMS.map(function(t){return '<button class="btn gray small" onclick="toggleItem(this)" data-t="'+t+'">'+t+'</button>'}).join('')
+    +'</div>'
+    +'<label>详细描述 / 其他事项</label><textarea id="rNote" placeholder="例如：饭后散步 20 分钟，血压 135/88，状态良好"></textarea>'
+    +'<div class="row" style="margin-top:12px"><button class="btn" onclick="saveRecord()">保存记录</button></div>'
+    +'<div class="okmsg" id="rMsg"></div></div>'
+    +'<div class="card"><h3>📌 今日记录（'+todayStr()+'）</h3><div id="todayList"></div></div>';
+  document.getElementById('main').innerHTML=h;
+  renderToday();
+}
+var picked={};
+function toggleItem(btn){
+  var t=btn.dataset.t;
+  if(picked[t]){ delete picked[t]; btn.style.background=''; btn.style.color=''; }
+  else{ picked[t]=1; btn.style.background='#2f6fed'; btn.style.color='#fff'; }
+}
+function saveRecord(){
+  var date=document.getElementById('rDate').value||todayStr();
+  var time=document.getElementById('rTime').value||nowTimeStr();
+  var items=Object.keys(picked).join('、');
+  var note=document.getElementById('rNote').value.trim();
+  if(!items&&!note){ toast("请选择或填写工作内容"); return; }
+  var rec={id:Date.now()+''+Math.floor(Math.random()*999), date:date, time:time, by:ME,
+    content:items+(note?(items?'；':'')+note:''), shift:shiftOfTime(time)};
+  DB.records.push(rec); commit();
+  picked={};
+  document.getElementById('rNote').value='';
+  document.querySelectorAll('#itemTags .btn').forEach(function(b){b.style.background='';b.style.color=''});
+  document.getElementById('rMsg').textContent='✅ 已保存'+(DB.hook?'，已推送微信群':'');
+  renderToday();
+  notify("📝 **"+ME+"** 新增看护记录\n> 📅 "+date+"（"+shiftName(rec.shift)+"班 "+time+"）\n> "+rec.content);
+}
+function renderToday(){
+  var list=DB.records.filter(function(r){return r.date===todayStr()}).sort(function(a,b){return b.time<a.time?-1:1});
+  var el=document.getElementById('todayList');
+  el.innerHTML=list.length?list.map(recHTML).join(''):'<div class="empty">今天还没有记录</div>';
+}
+function shiftOfTime(t){ var h=+t.split(':')[0]; return (h<12?'m':h<18?'a':'e'); }
+function shiftName(s){ return {m:'早',a:'中',e:'晚'}[s]; }
+function recHTML(r){
+  return '<div class="list-item"><div class="li-top"><b>'+r.by+'</b>'
+    +'<span class="tag '+r.shift+'">'+shiftName(r.shift)+'班</span>'
+    +'<span class="li-time">'+r.date+' '+r.time+'</span></div>'
+    +'<div class="li-body">'+r.content+'</div></div>';
+}
+
+/* ================== 排班页 ================== */
+function pageShift(){
+  var d=document.getElementById('shiftDate') ? document.getElementById('shiftDate').value : todayStr();
+  var day=DB.shifts[d]||{};
+  var h='<div class="card"><h3>📅 选班</h3>'
+    +'<label>日期</label><input type="date" id="shiftDate" value="'+d+'" onchange="pageShift()">'
+    +'<label style="margin-top:12px">点击班次值班（再点一次取消）</label><div class="shiftbtns" style="margin-top:6px">';
+  [['m','🌅 早班','06:00-12:00'],['a','☀️ 中班','12:00-18:00'],['e','🌙 晚班','18:00-24:00']].forEach(function(x){
+    var s=x[0], who=day[s]||'';
+    var cls='shiftbtn'+(who===ME?' mine':'')+(who?' taken':'');
+    h+='<div class="'+cls+'" onclick="pickShift(\''+d+'\',\''+s+'\')"><b>'+x[1]+'</b><span>'+x[2]+'</span>'
+      +'<div style="margin-top:8px;font-size:13px;color:'+(who?'var(--main)':'var(--sub)')+'">'+(who?who:'虚位以待')+'</div></div>';
+  });
+  h+='</div></div><div class="card"><h3>📋 近 7 天排班表</h3><div id="weekTable"></div></div>';
+  document.getElementById('main').innerHTML=h;
+  renderWeek(d);
+}
+function pickShift(d,s){
+  if(!DB.shifts[d]) DB.shifts[d]={};
+  var cur=DB.shifts[d][s]||'';
+  if(cur===ME){ delete DB.shifts[d][s]; commit(); pageShift();
+    notify("📅 **"+ME+"** 取消了 "+d+" "+shiftName(s)+"班值班"); return; }
+  if(cur){ toast("该班次已被 "+cur+" 选择"); return; }
+  DB.shifts[d][s]=ME; commit(); pageShift();
+  notify("📅 **"+ME+"** 认领了 "+d+" **"+shiftName(s)+"班** 值班");
+}
+function renderWeek(base){
+  var html='<table style="width:100%;border-collapse:collapse;font-size:13px"><tr style="color:var(--sub)">'
+    +'<td style="padding:6px">日期</td><td>早班</td><td>中班</td><td>晚班</td></tr>';
+  for(var i=0;i<7;i++){
+    var dt=new Date(base); dt.setDate(dt.getDate()+i);
+    var ds=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+    var day=DB.shifts[ds]||{};
+    html+='<tr style="border-top:1px solid var(--line)"><td style="padding:8px 6px">'+ds.slice(5)+(ds===todayStr()?' <span style="color:var(--main)">(今天)</span>':'')+'</td>'
+      +['m','a','e'].map(function(s){return '<td>'+(day[s]?'<b style="color:var(--main)">'+day[s]+'</b>':'—')+'</td>'}).join('')+'</tr>';
+  }
+  document.getElementById('weekTable').innerHTML=html+'</table>';
+}
+
+/* ================== 交接班页 ================== */
+function curShift(){ return shiftOfTime(nowTimeStr()); }
+function nextShift(){ return {m:'a',a:'e',e:'m'}[curShift()]; }
+function checkHandoverDue(){
+  var d=todayStr(), s=curShift(), who=(DB.shifts[d]||{})[s];
+  if(who===ME && !DB.handovers.some(function(x){return x.date===d&&x.fromShift===s})){
+    var bar=document.createElement('div'); bar.className='tipbar';
+    bar.innerHTML='⏰ 你是今天<b>'+shiftName(s)+'班</b>值班，请及时完成交接班总结';
+    var b=document.createElement('button'); b.className='btn small'; b.textContent='去交接';
+    b.onclick=function(){ go('handover'); bar.remove(); };
+    bar.appendChild(b);
+    document.getElementById('main').prepend(bar);
+  }
+}
+function pageHandover(){
+  var d=todayStr(), s=curShift(), nxt=nextShift(), nwho=(DB.shifts[d]||{})[nxt]||'（暂未排班）';
+  var today=DB.records.filter(function(r){return r.date===d});
+  var summary=today.map(function(r){return r.time+' '+r.by+'：'+r.content}).join('\n')||'（今天暂无记录）';
+  var h='<div class="card"><h3>🔄 交接班 · '+shiftName(s)+'班 → '+shiftName(nxt)+'班</h3>'
+    +'<p style="font-size:13px;color:var(--sub);margin-bottom:10px">今日已完成工作（自动汇总，可修改）：</p>'
+    +'<textarea id="hSummary" style="min-height:120px">'+summary+'</textarea>'
+    +'<div class="row" style="margin-top:12px"><div><label>交接给（下一班）</label>'
+    +'<select id="hTo">'+DB.people.map(function(p){return '<option'+(p===nwho?' selected':'')+'>'+p+'</option>'}).join('')+'</select></div></div>'
+    +'<label>交接备注（病人状态、注意事项等）</label><textarea id="hNote" placeholder="例如：老人晚上血压偏高，注意 21 点再量一次"></textarea>'
+    +'<div class="row" style="margin-top:12px"><button class="btn" onclick="doHandover()">✅ 完成交接</button></div>'
+    +'<div class="okmsg" id="hMsg"></div></div>'
+    +'<div class="card"><h3>📜 历史交接记录</h3><div id="hList">'+handoverList()+'</div></div>';
+  document.getElementById('main').innerHTML=h;
+}
+function handoverList(){
+  var list=DB.handovers.slice().sort(function(a,b){return a.id<b.id?1:-1});
+  return list.length?list.slice(0,10).map(function(x){
+    return '<div class="list-item"><div class="li-top"><b>'+x.from+' → '+x.to+'</b>'
+      +'<span class="tag '+x.fromShift+'">'+shiftName(x.fromShift)+'→'+shiftName(x.toShift)+'</span>'
+      +'<span class="li-time">'+x.date+'</span></div>'
+      +'<div class="li-body" style="white-space:pre-wrap;font-size:13px">'+x.summary+'</div>'
+      +(x.note?'<div class="li-sub">备注：'+x.note+'</div>':'')+'</div>';
+  }).join(''):'<div class="empty">暂无交接记录</div>';
+}
+function doHandover(){
+  var d=todayStr(), s=curShift();
+  var rec={id:Date.now()+'', date:d, from:ME, to:document.getElementById('hTo').value,
+    fromShift:s, toShift:nextShift(),
+    summary:document.getElementById('hSummary').value.trim(),
+    note:document.getElementById('hNote').value.trim()};
+  if(!rec.summary){ toast("请填写交接总结"); return; }
+  DB.handovers.push(rec); commit();
+  document.getElementById('hMsg').textContent='✅ 交接完成'+(DB.hook?'，已通知 '+rec.to:'');
+  document.getElementById('hList').innerHTML=handoverList();
+  notify("🔄 **交接班完成**\n> "+shiftName(s)+"班 **"+ME+"** → "+shiftName(rec.toShift)+"班 **@"+rec.to+"**\n> 今日工作：\n> "+rec.summary.slice(0,200)+(rec.note?("\n> ⚠️ "+rec.note):""));
+}
+
+/* ================== 查询页 ================== */
+function pageHistory(){
+  var h='<div class="card"><h3>📋 历史账单与记录查询</h3>'
+    +'<div class="filterbar">'
+    +'<input type="date" id="fDate" onchange="renderHistory()">'
+    +'<select id="fShift" onchange="renderHistory()"><option value="">全部班次</option><option value="m">早班</option><option value="a">中班</option><option value="e">晚班</option></select>'
+    +'<select id="fWho" onchange="renderHistory()"><option value="">全部人员</option>'+DB.people.map(function(p){return '<option>'+p+'</option>'}).join('')+'</select>'
+    +'<button class="btn gray small" onclick="clearFilter()">清空</button></div>'
+    +'<div id="histTabs" style="margin-bottom:8px"><button class="btn small" id="tabRec" onclick="histTab=\'rec\';renderHistory()">看护记录</button> '
+    +'<button class="btn gray small" id="tabHan" onclick="histTab=\'han\';renderHistory()">交接班</button></div>'
+    +'<div id="histList"></div></div>';
+  document.getElementById('main').innerHTML=h;
+  renderHistory();
+}
+var histTab='rec';
+function clearFilter(){ document.getElementById('fDate').value=''; document.getElementById('fShift').value=''; document.getElementById('fWho').value=''; renderHistory(); }
+function renderHistory(){
+  var d=document.getElementById('fDate').value, s=document.getElementById('fShift').value, w=document.getElementById('fWho').value;
+  document.getElementById('tabRec').className='btn small'+(histTab==='rec'?'':' gray');
+  document.getElementById('tabHan').className='btn small'+(histTab==='han'?'':' gray');
+  var html='';
+  if(histTab==='rec'){
+    var list=DB.records.filter(function(r){return (!d||r.date===d)&&(!s||r.shift===s)&&(!w||r.by===w)}).sort(function(a,b){return a.date<b.date?1:-1});
+    html=list.length?list.map(recHTML).join(''):'<div class="empty">无匹配记录</div>';
+  }else{
+    var l2=DB.handovers.filter(function(r){return (!d||r.date===d)&&(!s||r.fromShift===s)&&(!w||r.from===w||r.to===w)}).sort(function(a,b){return a.id<b.id?1:-1});
+    html=l2.length?l2.map(function(x){
+      return '<div class="list-item"><div class="li-top"><b>'+x.from+' → '+x.to+'</b>'
+        +'<span class="tag '+x.fromShift+'">'+shiftName(x.fromShift)+'→'+shiftName(x.toShift)+'</span>'
+        +'<span class="li-time">'+x.date+'</span></div>'
+        +'<div class="li-body" style="white-space:pre-wrap;font-size:13px">'+x.summary+'</div>'
+        +(x.note?'<div class="li-sub">备注：'+x.note+'</div>':'')+'</div>';
+    }).join(''):'<div class="empty">无匹配记录</div>';
+  }
+  document.getElementById('histList').innerHTML=html;
+}
+
+/* ================== 设置 ================== */
+function openSettings(){
+  document.getElementById('setHook').value=DB.hook||'';
+  document.getElementById('setRepo').value=DB.repo||'';
+  document.getElementById('setToken').value=DB.token||'';
+  document.getElementById('setModal').classList.remove('hide');
+}
+function closeSettings(){ document.getElementById('setModal').classList.add('hide'); }
+function saveSettings(){
+  DB.hook=document.getElementById('setHook').value.trim();
+  DB.repo=document.getElementById('setRepo').value.trim();
+  DB.token=document.getElementById('setToken').value.trim();
+  commit();
+  document.getElementById('setMsg').textContent='✅ 已保存';
+  setTimeout(closeSettings,600);
+  if(DB.repo){ pullRemote(function(remote){ mergeRemote(remote); }); }
+}
+
+/* ================== 启动 ================== */
+renderPeople();
+if(ME && DB.people.indexOf(ME)>=0) login(ME);
+/* 每 5 分钟：拉取远端 + 检查交接提醒 */
+setInterval(function(){
+  pullRemote(function(remote){ if(remote){ mergeRemote(remote); if(ME) checkHandoverDue(); } });
+}, 5*60*1000);
+</script>
+</body>
+</html>
