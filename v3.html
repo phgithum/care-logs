@@ -13,6 +13,14 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 nav{display:flex;gap:6px;background:#fff;border:1px solid #e5e8ef;border-radius:10px;padding:5px;margin-bottom:14px;position:sticky;top:0;z-index:5}
 nav button{flex:1;border:none;background:none;padding:9px 2px;border-radius:8px;font-size:14px;color:#5b6472;cursor:pointer}
 nav button.on{background:#2f6fed;color:#fff}
+/* 左侧三个小标签 */
+nav button.tab-s{flex:.72;font-size:13px;padding:9px 0}
+/* 右侧两个大按钮：记录 / 账单（老人优先，一眼能看到） */
+nav button.tab-big{flex:1.9;font-size:18px;font-weight:700;padding:11px 0;border-radius:9px}
+nav button.tab-big.rec{background:#eef4ff;color:#2f6fed;border:2px solid #2f6fed}
+nav button.tab-big.rec.on{background:#2f6fed;color:#fff}
+nav button.tab-big.bill{background:#fff3ea;color:#d9661f;border:2px solid #e5762f}
+nav button.tab-big.bill.on{background:#e5762f;color:#fff}
 .card{background:#fff;border:1px solid #e5e8ef;border-radius:10px;padding:14px;margin-bottom:12px}
 .card h3{font-size:15px;margin-bottom:10px}
 label{display:block;font-size:12px;color:#5b6472;margin:8px 0 4px}
@@ -69,11 +77,11 @@ button{border:none;border-radius:10px;padding:14px 22px;font-size:16px;cursor:po
 </header>
 
 <nav id="appNav" style="display:none">
-  <button data-p="rec" class="on" onclick="go('rec')">记录</button>
-  <button data-p="shift" onclick="go('shift')">排班</button>
-  <button data-p="bill" onclick="go('bill')">账单</button>
-  <button data-p="hand" onclick="go('hand')">交接</button>
-  <button data-p="hist" onclick="go('hist')">查询</button>
+  <button data-p="shift" class="tab-s" onclick="go('shift')">排班</button>
+  <button data-p="hand" class="tab-s" onclick="go('hand')">交接</button>
+  <button data-p="hist" class="tab-s" onclick="go('hist')">查询</button>
+  <button data-p="rec" class="tab-big rec on" onclick="go('rec')">📝 记录</button>
+  <button data-p="bill" class="tab-big bill" onclick="go('bill')">💰 账单</button>
 </nav>
 
 <div id="main"></div>
