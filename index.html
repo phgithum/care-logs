@@ -13,14 +13,12 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 nav{display:flex;gap:6px;background:#fff;border:1px solid #e5e8ef;border-radius:10px;padding:5px;margin-bottom:14px;position:sticky;top:0;z-index:5}
 nav button{flex:1;border:none;background:none;padding:9px 2px;border-radius:8px;font-size:14px;color:#5b6472;cursor:pointer}
 nav button.on{background:#2f6fed;color:#fff}
-/* 左侧三个小标签 */
-nav button.tab-s{flex:.72;font-size:13px;padding:9px 0}
-/* 右侧两个大按钮：记录 / 账单（老人优先，一眼能看到） */
-nav button.tab-big{flex:1.9;font-size:18px;font-weight:700;padding:11px 0;border-radius:9px}
-nav button.tab-big.rec{background:#eef4ff;color:#2f6fed;border:2px solid #2f6fed}
-nav button.tab-big.rec.on{background:#2f6fed;color:#fff}
-nav button.tab-big.bill{background:#fff3ea;color:#d9661f;border:2px solid #e5762f}
-nav button.tab-big.bill.on{background:#e5762f;color:#fff}
+/* 改/删操作按钮：放大、靠右，方便老人点 */
+.item .t{text-align:right}
+.opb{display:inline-block;padding:9px 20px;border-radius:9px;font-size:16px;font-weight:600;margin-left:8px;cursor:pointer}
+.opb.e{background:#eef4ff;color:#2f6fed}
+.opb.d{background:#fdecec;color:#e5484d}
+.opb:active{opacity:.7}
 .card{background:#fff;border:1px solid #e5e8ef;border-radius:10px;padding:14px;margin-bottom:12px}
 .card h3{font-size:15px;margin-bottom:10px}
 label{display:block;font-size:12px;color:#5b6472;margin:8px 0 4px}
@@ -77,11 +75,11 @@ button{border:none;border-radius:10px;padding:14px 22px;font-size:16px;cursor:po
 </header>
 
 <nav id="appNav" style="display:none">
-  <button data-p="shift" class="tab-s" onclick="go('shift')">排班</button>
-  <button data-p="hand" class="tab-s" onclick="go('hand')">交接</button>
-  <button data-p="hist" class="tab-s" onclick="go('hist')">查询</button>
-  <button data-p="rec" class="tab-big rec on" onclick="go('rec')">📝 记录</button>
-  <button data-p="bill" class="tab-big bill" onclick="go('bill')">💰 账单</button>
+  <button data-p="rec" class="on" onclick="go('rec')">记录</button>
+  <button data-p="shift" onclick="go('shift')">排班</button>
+  <button data-p="bill" onclick="go('bill')">账单</button>
+  <button data-p="hand" onclick="go('hand')">交接</button>
+  <button data-p="hist" onclick="go('hist')">查询</button>
 </nav>
 
 <div id="main"></div>
@@ -259,7 +257,7 @@ function renderToday(){var l=DB.records.filter(function(r){return r.d===today()}
   var cnt=function(k){return l.filter(function(r){return r.c.indexOf(k)>=0}).length};
   document.getElementById('recStats').textContent='今日统计：大便 '+cnt('大便')+' 次 · 小便 '+cnt('小便')+' 次 · 吃药 '+cnt('吃药')+' 次';
   document.getElementById('rList').innerHTML=l.length?l.map(function(r){
-    return '<div class="item"><b>'+esc(r.by)+'</b>（'+sn(r.s)+'班 '+r.t+'）<div>'+esc(r.c)+'</div><div class="t"><a style="color:#2f6fed;cursor:pointer" onclick="editRec(\''+r.id+'\')">改</a>　<a style="color:#e5484d;cursor:pointer" onclick="delRec(\''+r.id+'\')">删</a></div></div>'}).join(''):'<div class="empty">今天还没有记录</div>'}
+    return '<div class="item"><b>'+esc(r.by)+'</b>（'+sn(r.s)+'班 '+r.t+'）<div>'+esc(r.c)+'</div><div class="t"><span class="opb e" onclick="editRec(\''+r.id+'\')">改</span><span class="opb d" onclick="delRec(\''+r.id+'\')">删</span></div></div>'}).join(''):'<div class="empty">今天还没有记录</div>'}
 var recEdit=null;
 function editRec(id){var r=DB.records.filter(function(x){return x.id===id})[0];if(!r)return;
   recEdit=r;go('rec');
@@ -350,7 +348,7 @@ function renderBills(){
   var l=DB.bills.filter(function(b){return b.d===today()});
   var sum=0;
   document.getElementById('bList').innerHTML=l.length?l.map(function(b){sum+=b.m;
-    return '<div class="item"><b>'+esc(b.c)+'</b> — <span class="money">'+b.m.toFixed(1)+' 元</span><div class="t">'+esc(b.by)+' '+b.t+' <a style="color:#2f6fed;cursor:pointer" onclick="editBill(\''+b.id+'\')">改</a> <a style="color:#e5484d;cursor:pointer" onclick="delBill(\''+b.id+'\')">删</a></div></div>'}).join(''):'<div class="empty">今天还没花钱记录</div>';
+    return '<div class="item"><b>'+esc(b.c)+'</b> — <span class="money">'+b.m.toFixed(1)+' 元</span><div class="t">'+esc(b.by)+' '+b.t+'<span class="opb e" onclick="editBill(\''+b.id+'\')">改</span><span class="opb d" onclick="delBill(\''+b.id+'\')">删</span></div></div>'}).join(''):'<div class="empty">今天还没花钱记录</div>';
   document.getElementById('bTotal').textContent='今天合计：'+sum.toFixed(1)+' 元'}
 function renderSummary(){
   var range=document.getElementById('sumRange')?document.getElementById('sumRange').value:'month';
