@@ -51,14 +51,15 @@ td,th{padding:6px 4px;text-align:left;border-bottom:1px solid #eef0f4}
 </head>
 <body data-page-node-id="RlpcNAlHsxwTqOB3MMlfBl">
 
-<div id="loginPage" data-page-node-id="pltSdg5e3yPtHKZHtBj1Gs">
-  <div class="box" data-page-node-id="ozT2ymmG3bVnFqhTB2Ai44">
-    <h1 data-page-node-id="qoWgnZnuEVXV74WS6mSZn7">看护记账</h1>
-    <p class="sub" data-page-node-id="c7IPQOAAfnACqVHGrWI2nC">点名字进入</p>
-    <div class="grid" id="peopleGrid" data-page-node-id="wFGXsdzJAXoodQusLH5iaw"></div>
-    <div class="addrow" data-page-node-id="D63imIDTcHGEYbmTtnsiNK"><input id="newPerson" placeholder="新人员名字" maxlength="10" data-page-node-id="atkNIpJbGGAxGjm28ONCSq"><button class="pri" onclick="addPerson()" data-page-node-id="ezEYVNMlXEeDAthhxBXsvl">添加</button></div>
-    <p style="text-align:center;margin:12px 0 0" data-page-node-id="2MQcuq9LrKmxlEb6SOE2az"><a style="font-size:12px;color:#8a93a3;cursor:pointer" onclick="openSettings()" data-page-node-id="Es3ygQ5S1NM1hlkAFaBTBP">⚙️ 设置（微信播报 / 数据同步）</a></p>
+<div id="loginPage">
+  <div class="box">
+    <h1>看护记录</h1>
+    <p class="sub">第一次进来选一下你是谁，之后就自动记住了</p>
+    <div class="grid" id="peopleGrid"></div>
+    <div class="addrow"><input id="newPerson" placeholder="填写自己的名字" maxlength="10"><button class="pri" onclick="loginCustom()">进入</button></div>
+    <p style="text-align:center;margin:12px 0 0"><a style="font-size:12px;color:#8a93a3;cursor:pointer" onclick="openSettings()">⚙️ 设置（微信播报 / 数据同步）</a></p>
   </div>
+</div>div>
 </div>
 
 <div id="app" class="hide" data-page-node-id="dgep3gJle3tXKsiG2dQeZJ">
@@ -138,9 +139,7 @@ function renderPeople(){var g=document.getElementById('peopleGrid');g.innerHTML=
     b.onclick=function(){login(n)};g.appendChild(b)})}
 function loginCustom(){var v=document.getElementById('newPerson').value.trim();if(!v)return;
   login(v)}
-function addPerson(){var v=document.getElementById('newPerson').value.trim();if(!v)return;
-  if(DB.people.indexOf(v)<0){DB.people.push(v);commit();renderPeople();notify("👋 **"+v+"** 加入了看护组")}
-  document.getElementById('newPerson').value=''}
+
 function login(n){ME=n;sessionStorage.setItem(SES,n);
   document.getElementById('loginPage').classList.add('hide');
   document.getElementById('app').classList.remove('hide');
