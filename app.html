@@ -5,7 +5,7 @@
 <body style="font-family:sans-serif;background:#f5f6f8;display:flex;align-items:center;justify-content:center;height:100vh;color:#8a93a3">
 正在加载…
 <script>
-fetch('index.html?cb='+Date.now()).then(function(r){return r.text()}).then(function(t){
+fetch('v3.html?cb='+Date.now()).then(function(r){return r.text()}).then(function(t){
   document.open();document.write(t);document.close();
-}).catch(function(){location.href='index.html'});
+}).catch(function(){location.href='v3.html'});
 </script></body></html>
