@@ -119,7 +119,7 @@ function push(cb){if(!DB.repo||!DB.token){cb&&cb(false);return}
       q.send()};
     p.send(JSON.stringify(b))};
   x.send()}
-function commit(){save();push(function(ok){if(ok)toast("已同步")})}
+function commit(){save();push(function(ok){toast(ok?"已同步":"⚠️ 同步失败，稍后再试")})}
 function merge(r){if(!r)return;var s={};
   DB.records.forEach(function(x){s[x.id]=1});(r.records||[]).forEach(function(x){if(!s[x.id])DB.records.push(x)});
   s={};DB.bills.forEach(function(x){s[x.id]=1});(r.bills||[]).forEach(function(x){if(!s[x.id])DB.bills.push(x)});
