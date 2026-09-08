@@ -62,7 +62,7 @@ td,th{padding:6px 4px;text-align:left;border-bottom:1px solid #eef0f4}
 </div>
 
 <div id="app" class="hide" data-page-node-id="dgep3gJle3tXKsiG2dQeZJ">
-  <header data-page-node-id="qqVXONGDN3NBKt6EegJPW9"><b data-page-node-id="KmH3NofV9UJf8XPWWPZeoV">看护记账</b><span id="whoami" data-page-node-id="2W9nzTlOia77k0xDI4TZtg"></span><span class="sp" data-page-node-id="1hH4BKNDvj4XIxn4ge7jyI"></span><button class="gray small" onclick="logout()" data-page-node-id="HQG3FEDR8PxAX44PAxV7an">退出</button></header>
+  <header data-page-node-id="qqVXONGDN3NBKt6EegJPW9"><b data-page-node-id="KmH3NofV9UJf8XPWWPZeoV">看护记账</b><span id="whoami" data-page-node-id="2W9nzTlOia77k0xDI4TZtg"></span><span class="sp" data-page-node-id="1hH4BKNDvj4XIxn4ge7jyI"></span><button class="gray small" onclick="if(confirm('切换人员？当前记录不会丢'))logout()" data-page-node-id="HQG3FEDR8PxAX44PAxV7an">换人</button></header>
   <nav data-page-node-id="rvMThis4KrkMA9GGSkXKVn">
     <button data-p="rec" class="on" onclick="go('rec')" data-page-node-id="HrBbNTp29UKxcbqWDSICFx">记录</button>
     <button data-p="shift" onclick="go('shift')" data-page-node-id="Jw3XTkN52rNH2jrb3QCMOK">排班</button>
@@ -87,7 +87,7 @@ var DB_KEY='care_db_v2', SES='care_ses';
 function load(){try{var d=JSON.parse(localStorage.getItem(DB_KEY));if(d&&d.people)return d}catch(e){}
   return {people:['张阿姨','李阿姨'],shifts:{},records:[],bills:[],hands:[],hook:'',repo:'',token:''}}
 function save(){try{localStorage.setItem(DB_KEY,JSON.stringify(DB))}catch(e){}}
-var DB=load(), ME=sessionStorage.getItem(SES)||'';
+var DB=load(), ME=localStorage.getItem(SES)||'';
 
 /* ---- GitHub 同步 ---- */
 function gh(){return{"Authorization":"Bearer "+DB.token,"Accept":"application/vnd.github+json","Content-Type":"application/json","User-Agent":"care"}}
@@ -133,11 +133,11 @@ function renderPeople(){var g=document.getElementById('peopleGrid');g.innerHTML=
 function addPerson(){var v=document.getElementById('newPerson').value.trim();if(!v)return;
   if(DB.people.indexOf(v)<0){DB.people.push(v);commit();renderPeople();notify("👋 **"+v+"** 加入了看护组")}
   document.getElementById('newPerson').value=''}
-function login(n){ME=n;sessionStorage.setItem(SES,n);
+function login(n){ME=n;try{localStorage.setItem(SES,n)}catch(e){};
   document.getElementById('loginPage').classList.add('hide');
   document.getElementById('app').classList.remove('hide');
   document.getElementById('whoami').textContent='· '+n;go('rec');handRemind()}
-function logout(){sessionStorage.removeItem(SES);location.reload()}
+function logout(){try{localStorage.removeItem(SES)}catch(e){};location.reload()}
 
 /* ---- 路由 ---- */
 function go(p){document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.p===p)});
