@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>看护记录 · 后台</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f6f8;color:#1f2430;padding:16px;max-width:720px;margin:0 auto}
+h1{font-size:20px;margin-bottom:4px}
+.sub{color:#8a93a3;font-size:13px;margin-bottom:16px}
+.card{background:#fff;border:1px solid #e5e8ef;border-radius:10px;padding:14px;margin-bottom:14px}
+.card h3{font-size:15px;margin-bottom:10px}
+label{display:block;font-size:12px;color:#5b6472;margin:8px 0 4px}
+input[type=text],input[type=password],input[type=time],textarea{width:100%;padding:9px 10px;border:1px solid #dfe3ea;border-radius:8px;font-size:14px;background:#fafbfc}
+textarea{min-height:64px;resize:vertical}
+button{border:none;border-radius:8px;padding:9px 16px;font-size:14px;cursor:pointer}
+.pri{background:#2f6fed;color:#fff}
+.gray{background:#eef0f4;color:#3a4150}
+.small{padding:5px 10px;font-size:12px}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.row input[type=time]{width:110px}
+.row textarea{flex:1}
+.ok{color:#1a9e55;font-size:13px;margin-top:8px;min-height:18px}
+.err{color:#e5484d;font-size:13px;margin-top:8px}
+#gate{position:fixed;inset:0;background:#f5f6f8;display:flex;align-items:center;justify-content:center;z-index:10}
+.gbox{background:#fff;border:1px solid #e5e8ef;border-radius:12px;padding:28px;width:300px;text-align:center}
+.tip{font-size:12px;color:#8a93a3;margin-top:6px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gbox">
+    <h1 style="margin-bottom:8px">看护后台</h1>
+    <input type="password" id="gpwd" placeholder="后台密码" onkeydown="if(event.key==='Enter')tryGate()">
+    <div style="margin-top:10px"><button class="pri" onclick="tryGate()">进入</button></div>
+    <div class="err" id="gmsg"></div>
+  </div>
+</div>
+
+<div id="app" class="hide">
+  <h1>看护记录 · 后台</h1>
+  <p class="sub">改完点保存，全组生效（约 1 分钟内）</p>
+
+  <div class="card">
+    <h3>① GitHub 连接</h3>
+    <label>仓库 Token（只需填一次，存本机）</label>
+    <input type="password" id="cfgToken" placeholder="ghp_...">
+    <div class="tip">用于读写 care-logs 仓库的 config.json</div>
+  </div>
+
+  <div class="card">
+    <h3>② 名单设置</h3>
+    <div id="peopleBox"></div>
+    <div class="tip">老大～老五按顺序显示；写错随时改，保存后所有人首页更新</div>
+  </div>
+
+  <div class="card">
+    <h3>③ 定时提醒（北京时间）</h3>
+    <div id="taskBox"></div>
+    <button class="gray small" onclick="addTask()">＋ 加一条提醒</button>
+    <div class="tip" style="margin-top:8px">发送时间可能有几分钟误差；消息里可换行</div>
+  </div>
+
+  <div style="display:flex;gap:8px">
+    <button class="pri" style="flex:1" onclick="saveAll()">💾 保存全部</button>
+    <button class="gray" onclick="location.reload()">刷新</button>
+  </div>
+  <div class="ok" id="msg"></div>
+  <div class="tip" style="margin:10px 0 30px">群机器人 Webhook 存在仓库 Secret 里（WECOM_WEBHOOK），改提醒内容不需要动它。回到看护记录：<a href="https://phgithum.github.io/care-logs/">phgithum.github.io/care-logs</a></div>
+</div>
+
+<script>
+var REPO='phgithum/care-logs', CFG='config.json', PWD='panhao123';
+var RANKS=['老大','老二','老三','老四','老五','老六','老七','老八'];
+var CONFIG={people:['张丽珍','张苏珍','张巧珍','张榕珍','张如珍'],
+  tasks:[{t:'08:00',msg:'☀️ 早安提醒\n今天早班的人别忘了：早饭/吃药/量血压已记录到【看护记录】'},
+         {t:'15:00',msg:'🕐 下午提醒\n记得记录下午的护理情况（吃饭/小便/散步等），账单买了东西随手记一笔'},
+         {t:'21:00',msg:'🌙 晚间提醒\n今天晚班的人记得：\n1. 量晚间血压\n2. 在【看护记录】里完成交接班'}]};
+function tk(){return localStorage.getItem('care_admin_token')||''}
+function gh(){return{"Authorization":"Bearer "+tk(),"Accept":"application/vnd.github+json","Content-Type":"application/json","User-Agent":"care"}}
+function tryGate(){
+  if(document.getElementById('gpwd').value===PWD){
+    document.getElementById('gate').classList.add('hide');
+    document.getElementById('app').classList.remove('hide');
+    document.getElementById('cfgToken').value=tk();init();
+  }else document.getElementById('gmsg').textContent='密码不对'}
+function init(){
+  if(!tk()){document.getElementById('msg').textContent='先填上面 Token 再刷新';return}
+  var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+REPO+"/contents/"+CFG);
+  Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
+  x.onload=function(){
+    if(x.status===200){try{CONFIG=JSON.parse(decodeURIComponent(escape(atob(JSON.parse(x.responseText).content.replace(/\n/g,'')))))}catch(e){}}
+    render()};
+  x.send()}
+function render(){
+  var pb=document.getElementById('peopleBox');pb.innerHTML='';
+  CONFIG.people.forEach(function(n,i){
+    var d=document.createElement('div');d.className='row';
+    d.innerHTML='<span style="font-size:12px;color:#8a93a3;width:34px">'+(RANKS[i]||'')+'</span>';
+    var inp=document.createElement('input');inp.type='text';inp.value=n;inp.maxLength=10;
+    d.appendChild(inp);pb.appendChild(d)});
+  var tb=document.getElementById('taskBox');tb.innerHTML='';
+  CONFIG.tasks.forEach(function(t,i){
+    var d=document.createElement('div');d.className='row';
+    var tm=document.createElement('input');tm.type='time';tm.value=t.t;
+    var ta=document.createElement('textarea');ta.value=t.msg;
+    var del=document.createElement('button');del.className='gray small';del.textContent='删';
+    del.onclick=function(){CONFIG.tasks.splice(i,1);render()};
+    d.appendChild(tm);d.appendChild(ta);d.appendChild(del);tb.appendChild(d)})}
+function addTask(){CONFIG.tasks.push({t:'12:00',msg:'提醒内容'});render()}
+function saveAll(){
+  var names=[].map.call(document.querySelectorAll('#peopleBox input'),function(i){return i.value.trim()}).filter(Boolean);
+  if(!names.length){document.getElementById('msg').textContent='名单不能为空';return}
+  localStorage.setItem('care_admin_token',document.getElementById('cfgToken').value.trim());
+  var rows=document.querySelectorAll('#taskBox .row');
+  CONFIG.people=names;
+  CONFIG.tasks=[].map.call(rows,function(r){
+    return{t:r.querySelector('input').value||'08:00',msg:r.querySelector('textarea').value.trim()||'提醒'}});
+  var body={message:'update config',content:btoa(unescape(encodeURIComponent(JSON.stringify(CONFIG,null,1)))),branch:'main'};
+  var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+REPO+"/contents/"+CFG);
+  Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
+  x.onload=function(){
+    if(x.status===200){try{body.sha=JSON.parse(x.responseText).sha}catch(e){}}
+    var p=new XMLHttpRequest();p.open("PUT","https://api.github.com/repos/"+REPO+"/contents/"+CFG);
+    Object.keys(gh()).forEach(function(k){p.setRequestHeader(k,gh()[k])});
+    p.onload=function(){
+      document.getElementById('msg').textContent=(p.status===200)?'✅ 已保存，全组约 1 分钟内生效':'❌ 保存失败('+p.status+') 检查 Token'};
+    p.send(JSON.stringify(body))};
+  x.send()}
+</script>
+</body>
+</html>
