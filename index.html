@@ -97,6 +97,10 @@ function load(){try{var d=JSON.parse(localStorage.getItem(DB_KEY));if(d)return d
   return {people:['张丽珍','张苏珍','张巧珍','张榕珍','张如珍'],extras:[],shifts:{},records:[],bills:[],hands:[],repo:'',token:'',hook:''}}
 function save(){try{localStorage.setItem(DB_KEY,JSON.stringify(DB))}catch(e){}}
 var DB=load(), ME=localStorage.getItem(SES)||'';
+if(!Array.isArray(DB.people))DB.people=['张丽珍','张苏珍','张巧珍','张榕珍','张如珍'];
+if(!Array.isArray(DB.extras))DB.extras=[];
+if(!DB.shifts)DB.shifts={};if(!Array.isArray(DB.records))DB.records=[];
+if(!Array.isArray(DB.bills))DB.bills=[];if(!Array.isArray(DB.hands))DB.hands=[];
 if(!DB.repo)DB.repo=DEF_REPO;
 if(!DB.token)DB.token=DEF_TOKEN;
 if(!DB.hook)DB.hook=DEFAULT_HOOK;
@@ -301,7 +305,11 @@ function pageBill(){
     +'<div style="margin-top:10px"><button class="pri" onclick="saveBill()">'+(billEdit?'更新这条':'保存')+'</button> '
     +(billEdit?'<button class="gray" onclick="billEdit=null;pageBill()">取消</button>':'')
     +'<span class="ok" id="bMsg"></span></div></div>'
-    +'<div class="card"><h3>今天的账</h3><div id="bList"></div><div id="bTotal" style="margin-top:8px;font-weight:bold"></div></div>';
+    +'<div class="card"><h3>今天的账</h3><div id="bList"></div><div id="bTotal" style="margin-top:8px;font-weight:bold"></div></div>'
+    +'<div class="card"><h3>账单总结</h3>'
+    +'<div class="row"><select id="sumRange" onchange="renderSummary()" style="width:auto;flex:none">'
+    +'<option value="week">本周</option><option value="month">本月</option><option value="all">全部</option></select></div>'
+    +'<div id="sumBox" style="margin-top:10px"></div></div>';
   document.getElementById('main').innerHTML=h;
   if(billEdit){document.getElementById('bC').value=billEdit.c;document.getElementById('bM').value=billEdit.m}
   renderBills()}
@@ -321,6 +329,30 @@ function renderBills(){
   document.getElementById('bList').innerHTML=l.length?l.map(function(b){sum+=b.m;
     return '<div class="item"><b>'+esc(b.c)+'</b> — <span class="money">'+b.m.toFixed(1)+' 元</span><div class="t">'+esc(b.by)+' '+b.t+' <a style="color:#2f6fed;cursor:pointer" onclick="editBill(\''+b.id+'\')">改</a> <a style="color:#e5484d;cursor:pointer" onclick="delBill(\''+b.id+'\')">删</a></div></div>'}).join(''):'<div class="empty">今天还没花钱记录</div>';
   document.getElementById('bTotal').textContent='今天合计：'+sum.toFixed(1)+' 元'}
+function renderSummary(){
+  var range=document.getElementById('sumRange')?document.getElementById('sumRange').value:'month';
+  var now=new Date(),start;
+  if(range==='week'){var dow=now.getDay()||7;start=new Date(now.getTime()-(dow-1)*864e5)}
+  else if(range==='month')start=new Date(now.getFullYear(),now.getMonth(),1);
+  else start=new Date(0);
+  function fmt(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+  var lim=fmt(start);
+  var l=DB.bills.filter(function(b){return b.d>=lim});
+  var total=0,byPerson={},byDay={};
+  l.forEach(function(b){total+=b.m;byPerson[b.by]=(byPerson[b.by]||0)+b.m;byDay[b.d]=(byDay[b.d]||0)+b.m});
+  var names=Object.keys(byPerson).sort(function(a,b){return byPerson[b]-byPerson[a]});
+  var h='<div style="font-size:15px;font-weight:bold;margin-bottom:8px">'+(range==='week'?'本周':range==='month'?'本月':'全部')+'合计：'+total.toFixed(1)+' 元（'+l.length+' 笔）</div>';
+  if(names.length){
+    h+='<label>谁花的</label>';
+    names.forEach(function(n){
+      var pct=total?Math.round(byPerson[n]/total*100):0;
+      h+='<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>'+esc(n)+'</span><b>'+byPerson[n].toFixed(1)+' 元</b></div>'
+        +'<div style="background:#eef0f4;border-radius:6px;height:8px;margin-top:3px"><div style="background:#2f6fed;border-radius:6px;height:8px;width:'+pct+'%"></div></div></div>'});
+    var days=Object.keys(byDay).sort().reverse().slice(0,7);
+    h+='<label style="margin-top:10px">最近每天花销</label>';
+    days.forEach(function(d){h+='<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:1px solid #f0f2f6"><span>'+d+'</span><b>'+byDay[d].toFixed(1)+' 元</b></div>'});
+  }else h+='<div class="empty">这个范围还没有账单</div>';
+  document.getElementById('sumBox').innerHTML=h}
 function editBill(id){var b=DB.bills.filter(function(x){return x.id===id})[0];if(b){billEdit=b;pageBill()}}
 function delBill(id){var i=DB.bills.findIndex(function(x){return x.id===id});
   if(i<0)return;if(!confirm('确定删除这条账？'))return;
