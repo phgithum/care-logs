@@ -110,7 +110,14 @@ function push(cb){if(!DB.repo||!DB.token){cb&&cb(false);return}
   x.onload=function(){var b={message:"sync",content:btoa(unescape(encodeURIComponent(JSON.stringify(DB)))),branch:"main"};
     if(x.status===200){try{b.sha=JSON.parse(x.responseText).sha}catch(e){}}
     var p=new XMLHttpRequest();p.open("PUT",api);Object.keys(gh()).forEach(function(k){p.setRequestHeader(k,gh()[k])});
-    p.onload=function(){cb&&cb(p.status<300)};p.send(JSON.stringify(b))};
+    p.onload=function(){if(p.status<300){cb&&cb(true);return}
+      var q=new XMLHttpRequest();q.open("GET",api);Object.keys(gh()).forEach(function(k){q.setRequestHeader(k,gh()[k])});
+      q.onload=function(){var b2={message:"sync",content:b.content,branch:"main"};
+        if(q.status===200){try{b2.sha=JSON.parse(q.responseText).sha}catch(e){}}
+        var r2=new XMLHttpRequest();r2.open("PUT",api);Object.keys(gh()).forEach(function(k){r2.setRequestHeader(k,gh()[k])});
+        r2.onload=function(){cb&&cb(r2.status<300)};r2.send(JSON.stringify(b2))};
+      q.send()};
+    p.send(JSON.stringify(b))};
   x.send()}
 function commit(){save();push(function(ok){if(ok)toast("已同步")})}
 function merge(r){if(!r)return;var s={};
@@ -167,7 +174,8 @@ function registerExtra(name){
 function login(n){ME=n;sessionStorage.setItem(SES,n);
   document.getElementById('loginPage').classList.add('hide');
   document.getElementById('app').classList.remove('hide');
-  document.getElementById('whoami').textContent='· '+n;go('rec');handRemind()}
+  document.getElementById('whoami').textContent='· '+n;go('rec');handRemind();
+  pull(function(r){if(r){merge(r);if(p==='rec')pageRec()}})}
 function logout(){sessionStorage.removeItem(SES);location.reload()}
 
 /* ---- 路由 ---- */
