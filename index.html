@@ -107,7 +107,8 @@ function pull(cb){if(!DB.repo||!DB.token){cb(null);return}
 function push(cb){if(!DB.repo||!DB.token){cb&&cb(false);return}
   var api="https://api.github.com/repos/"+DB.repo+"/contents/data.json";
   var x=new XMLHttpRequest();x.open("GET",api);Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
-  x.onload=function(){var b={message:"sync",content:btoa(unescape(encodeURIComponent(JSON.stringify(DB)))),branch:"main"};
+  x.onload=function(){var up={};Object.keys(DB).forEach(function(k){if(k!=='token'&&k!=='hook')up[k]=DB[k]});
+    var b={message:"sync",content:btoa(unescape(encodeURIComponent(JSON.stringify(up)))),branch:"main"};
     if(x.status===200){try{b.sha=JSON.parse(x.responseText).sha}catch(e){}}
     var p=new XMLHttpRequest();p.open("PUT",api);Object.keys(gh()).forEach(function(k){p.setRequestHeader(k,gh()[k])});
     p.onload=function(){if(p.status<300){cb&&cb(true);return}
