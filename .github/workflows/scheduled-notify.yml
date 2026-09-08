@@ -1,0 +1,22 @@
+name: scheduled-notify
+on:
+  schedule:
+    - cron: '0 0 * * *'    # 北京时间每天 08:00
+    - cron: '0 7 * * *'    # 北京时间每天 15:00
+    - cron: '0 13 * * *'   # 北京时间每天 21:00
+  workflow_dispatch:
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: send
+        env:
+          HOOK: ${{ secrets.WECOM_WEBHOOK }}
+        run: |
+          case "${{ github.event.schedule }}" in
+            "0 0 * * *")  MSG="☀️ 早安提醒\n今天早班的人别忘了：早饭/吃药/量血压已记录到【看护记录】\n👉 https://phgithum.github.io/care-logs/" ;;
+            "0 7 * * *")  MSG="🕐 下午提醒\n记得记录下午的护理情况（吃饭/小便/散步等），账单买了东西随手记一笔" ;;
+            *)            MSG="🌙 晚间提醒\n晚上好，今天晚班的人记得：\n1. 量晚间血压\n2. 在【看护记录】里完成交接班\n👉 https://phgithum.github.io/care-logs/" ;;
+          esac
+          curl -s -X POST "$HOOK" -H "Content-Type: application/json" \
+            -d "{\"msgtype\":\"text\",\"text\":{\"content\":\"$MSG\"}}"
