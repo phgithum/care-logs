@@ -322,7 +322,10 @@ function doHand(){
   DB.hands.push(r);commit();
   document.getElementById('hMsg').textContent='✅ 交接完成，已通知 '+r.to;
   document.getElementById('hList').innerHTML=handList();
-  notify("🔄 **交接班** "+d+"\n"+sn(s)+"班 **"+ME+"** → "+sn(r.ts)+"班 **@ "+r.to+"** 请接手\n上一班情况：\n"+(shiftSummary(d,prevShiftOf(s))||'（上一班未填写记录，请补填）')+"\n——\n"+su.slice(0,180))}
+  var m="🔄 **交接班** "+d+"\n"+sn(s)+"班 **"+ME+"** → "+sn(r.ts)+"班 **@ "+r.to+"** 请接手\n";
+  if(CFG.handSum!==false)m+="上一班情况：\n"+(shiftSummary(d,prevShiftOf(s))||'（上一班未填写记录，请补填）')+"\n";
+  m+="——\n"+su.slice(0,180);
+  notify(m)}
 
 /* ================= 查询页 ================= */
 function pageHist(){
@@ -358,12 +361,14 @@ renderPeople();
 if(ME&&DB.people.indexOf(ME)>=0)login(ME);
 setInterval(function(){pull(function(r){if(r){merge(r);if(ME)handRemind()}})},5*60*1000);
 /* 后台 config.json 名单同步 */
+var CFG={};
 function syncCfg(){
   if(!DB.repo||!DB.token)return;
   var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+DB.repo+"/contents/config.json");
   Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
   x.onload=function(){if(x.status!==200)return;
     try{var c=JSON.parse(decodeURIComponent(escape(atob(JSON.parse(x.responseText).content.replace(/\n/g,'')))));
+    CFG=c;
     if(c.people&&c.people.length){var changed=JSON.stringify(c.people)!==JSON.stringify(DB.people);
       DB.people=c.people;if(changed){commit();renderPeople();
         if(ME&&DB.people.indexOf(ME)<0){localStorage.removeItem(SES);location.reload()}}}}catch(e){}};
