@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>看护记录</title></head>
+<body style="font-family:sans-serif;background:#f5f6f8;display:flex;align-items:center;justify-content:center;height:100vh;color:#8a93a3">
+正在加载…
+<script>
+fetch('index.html?cb='+Date.now()).then(function(r){return r.text()}).then(function(t){
+  document.open();document.write(t);document.close();
+}).catch(function(){location.href='index.html'});
+</script></body></html>
