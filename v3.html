@@ -33,6 +33,9 @@ button{border:none;border-radius:10px;padding:14px 22px;font-size:16px;cursor:po
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{padding:10px 16px;border:1px solid #dfe3ea;border-radius:22px;font-size:15px;background:#fafbfc;cursor:pointer}
 .chip.on{background:#2f6fed;border-color:#2f6fed;color:#fff}
+/* 高频项大按钮：吃药/大便/小便/拖地 */
+.chip.main{font-size:19px;padding:16px 26px;font-weight:700;background:#eef4ff;border:2px solid #2f6fed;color:#2f6fed}
+.chip.main.on{background:#2f6fed;color:#fff}
 .item{border-bottom:1px solid #f0f2f6;padding:9px 0;font-size:14px}
 .item:last-child{border-bottom:none}
 .item .t{color:#8a93a3;font-size:12px;margin-top:2px}
@@ -94,7 +97,8 @@ var DEF_REPO='phgithum/care-logs';
 var DEF_TOKEN='ghp_MjkBxQwkydhgmw7TxpItxQrNhtXKsO1sA'+'wRS';
 var DEFAULT_HOOK='https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=a1c92aec-335c-4f9b-a9c1-e02f753d5d1b';
 var RANK=['老大','老二','老三','老四','老五','老六','老七','老八'];
-var ITEMS=['吃饭','喝水','吃药','大便','小便','洗澡','拖地','换尿布','量血压','散步','睡觉'];
+var ITEMS=['吃药','大便','小便','拖地','吃饭','喝水','洗澡','换尿布','量血压','散步','睡觉'];
+var MAIN_N=4; /* 前 4 个为高频项，显示为大按钮 */
 var TIMED=['吃药','大便','小便'];
 var SN={m:'早',a:'中',e:'晚'};
 var pick={}, CFG={b1:12,b2:18,handSum:true};
@@ -215,7 +219,7 @@ function pageRec(){
   var h='<div class="card"><h3>记一笔</h3>'
     +'<div class="row"><div><label>日期</label><input type="date" id="rD" value="'+today()+'"></div>'
     +'<div><label>时间</label><input type="time" id="rT" value="'+now()+'"></div></div>'
-    +'<label>做了什么（可多选）</label><div class="chips">'+ITEMS.map(function(t){return '<span class="chip" onclick="pk(this,\''+t+'\')">'+t+'</span>'}).join('')+'</div>'
+    +'<label>做了什么（可多选）</label><div class="chips">'+ITEMS.map(function(t,i){return '<span class="chip'+(i<MAIN_N?' main':'')+'" onclick="pk(this,\''+t+'\')">'+t+'</span>'}).join('')+'</div>'
     +'<div id="itemTimes"></div>'
     +'<label>补充说明（状态等）</label><textarea id="rN" placeholder="例如：大便正常成型；血压135/88"></textarea>'
     +'<div style="margin-top:10px"><button class="pri" onclick="saveRec()">保存</button><span class="ok" id="rMsg"></span></div></div>'
