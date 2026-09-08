@@ -250,26 +250,24 @@ function handRemind(){
     bar.appendChild(b);document.getElementById('main').prepend(bar)}}
 function pageHand(){
   var d=today(),s=curShift(),n=nxtShift(),nw=(DB.shifts[d]||{})[n]||DB.people.filter(function(p){return p!==ME})[0]||'';
-  var sum=DB.records.filter(function(r){return r.d===d}).map(function(r){return r.t+' '+r.by+'：'+r.c}).join('\n');
   var h='<div class="card"><h3>交接 · '+sn(s)+'班 → '+sn(n)+'班</h3>'
-    +'<label>今天做了什么（自动汇总，可改）</label><textarea id="hS" style="min-height:100px">'+(sum||'')+'</textarea>'
+    +'<label>要交代的事情</label><textarea id="hS" style="min-height:110px" placeholder="如：老人状态稳定；10点半大便一次正常；晚上血压偏高21点再量"></textarea>'
     +'<label>交给谁</label><select id="hTo">'+DB.people.map(function(p){return '<option'+(p===nw?' selected':'')+'>'+p+'</option>'}).join('')+'</select>'
-    +'<label>备注（病人情况、注意事项）</label><textarea id="hN" placeholder="如：晚上血压偏高，21点再量一次"></textarea>'
     +'<div style="margin-top:10px"><button class="pri" onclick="doHand()">完成交接</button></div><div class="ok" id="hMsg"></div></div>'
     +'<div class="card"><h3>交接记录</h3><div id="hList">'+handList()+'</div></div>';
   document.getElementById('main').innerHTML=h}
 function handList(){var l=DB.hands.slice().sort(function(a,b){return a.id<b.id?1:-1});
   return l.length?l.slice(0,10).map(function(x){
-    return '<div class="item"><b>'+x.from+' → '+x.to+'</b>（'+sn(x.fs)+'→'+sn(x.ts)+'）<div class="t">'+x.d+'</div><div style="white-space:pre-wrap">'+x.s+'</div>'+(x.n?'<div class="t">备注：'+x.n+'</div>':'')+'</div>'}).join(''):'<div class="empty">暂无</div>'}
+    return '<div class="item"><b>'+x.from+' → '+x.to+'</b>（'+sn(x.fs)+'→'+sn(x.ts)+'）<div class="t">'+x.d+'</div><div style="white-space:pre-wrap">'+x.s+'</div>'+'</div>'}).join(''):'<div class="empty">暂无</div>'}
 function doHand(){
   var d=today(),s=curShift();
   var su=document.getElementById('hS').value.trim();
   if(!su){toast("填一下交接内容");return}
-  var r={id:''+Date.now(),d:d,from:ME,to:document.getElementById('hTo').value,fs:s,ts:nxtShift(),s:su,n:document.getElementById('hN').value.trim()};
+  var r={id:''+Date.now(),d:d,from:ME,to:document.getElementById('hTo').value,fs:s,ts:nxtShift(),s:su};
   DB.hands.push(r);commit();
   document.getElementById('hMsg').textContent='✅ 交接完成，已通知 '+r.to;
   document.getElementById('hList').innerHTML=handList();
-  notify("🔄 **交接班** "+d+"\n"+sn(s)+"班 **"+ME+"** → "+sn(r.ts)+"班 **@"+r.to+"**\n"+su.slice(0,180)+(r.n?"\n⚠️ "+r.n:""))}
+  notify("🔄 **交接班** "+d+"\n"+sn(s)+"班 **"+ME+"** → "+sn(r.ts)+"班 **@"+r.to+"**\n"+su.slice(0,180))}
 
 /* ================= 查询页 ================= */
 function pageHist(){
@@ -288,7 +286,7 @@ function runQ(){
     var sum=0;
     out=l2.length?l2.map(function(b){sum+=b.m;return '<div class="item">'+b.d+' <b>'+b.c+'</b> — <span class="money">'+b.m.toFixed(1)+' 元</span><div class="t">'+b.by+'</div></div>'}).join('')+'<div class="total">合计：'+sum.toFixed(1)+' 元</div>':'<div class="empty">无</div>'}
   else{var l3=DB.hands.filter(function(x){return(!d||x.d===d)&&(!w||x.from===w||x.to===w)}).sort(function(a,b){return a.id<b.id?1:-1});
-    out=l3.length?l3.map(function(x){return '<div class="item"><b>'+x.from+' → '+x.to+'</b>（'+sn(x.fs)+'→'+sn(x.ts)+'）<div class="t">'+x.d+'</div><div style="white-space:pre-wrap">'+x.s+'</div>'+(x.n?'<div class="t">备注：'+x.n+'</div>':'')+'</div>'}).join(''):'<div class="empty">无</div>'}
+    out=l3.length?l3.map(function(x){return '<div class="item"><b>'+x.from+' → '+x.to+'</b>（'+sn(x.fs)+'→'+sn(x.ts)+'）<div class="t">'+x.d+'</div><div style="white-space:pre-wrap">'+x.s+'</div>'+'</div>'}).join(''):'<div class="empty">无</div>'}
   document.getElementById('qOut').innerHTML=out}
 
 /* ---- 设置 ---- */
