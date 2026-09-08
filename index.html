@@ -130,7 +130,10 @@ function toast(m){var t=document.createElement("div");t.textContent=m;
 /* ---- 工具 ---- */
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function now(){var d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
-function shiftOf(t){var h=+t.split(':')[0];return h<12?'m':h<18?'a':'e'}
+function shiftOf(t){var p=t.split(':'),hm=(+p[0])+((+p[1])||0)/60;
+  var b1=(CFG.b1||'12:00').split(':'),b2=(CFG.b2||'18:00').split(':');
+  var m1=(+b1[0])+((+b1[1])||0)/60,m2=(+b2[0])+((+b2[1])||0)/60;
+  return hm<m1?'m':hm<m2?'a':'e'}
 function sn(s){return{m:'早',a:'中',e:'晚'}[s]}
 
 /* ---- 登录 ---- */
@@ -140,7 +143,24 @@ function renderPeople(){var g=document.getElementById('peopleGrid');g.innerHTML=
     b.innerHTML=RANK[n]?n+'<br><small style="color:#8a93a3;font-weight:normal">'+RANK[n]+'</small>':n;
     b.onclick=function(){login(n)};g.appendChild(b)})}
 function loginCustom(){var v=document.getElementById('newPerson').value.trim();if(!v)return;
-  login(v)}
+  registerExtra(v);login(v)}
+function registerExtra(name){
+  if(!DB.repo||!DB.token)return;
+  var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+DB.repo+"/contents/config.json");
+  Object.keys(gh()).forEach(function(k){x.setRequestHeader(k,gh()[k])});
+  x.onload=function(){var cfg,sha=null;
+    if(x.status===200){try{var dd=JSON.parse(x.responseText);sha=dd.sha;
+      cfg=JSON.parse(decodeURIComponent(escape(atob(dd.content.replace(/\n/g,'')))))}catch(e){return}}
+    else cfg={};
+    if(!cfg.extras)cfg.extras=[];
+    if(cfg.extras.indexOf(name)>=0||cfg.people&&cfg.people.indexOf(name)>=0)return;
+    cfg.extras.push(name);
+    var body={message:'register '+name,content:btoa(unescape(encodeURIComponent(JSON.stringify(cfg,null,1)))),branch:'main'};
+    if(sha)body.sha=sha;
+    var p=new XMLHttpRequest();p.open("PUT","https://api.github.com/repos/"+DB.repo+"/contents/config.json");
+    Object.keys(gh()).forEach(function(k){p.setRequestHeader(k,gh()[k])});
+    p.send(JSON.stringify(body))};
+  x.send()}
 
 function login(n){ME=n;sessionStorage.setItem(SES,n);
   document.getElementById('loginPage').classList.add('hide');
