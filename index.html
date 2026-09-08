@@ -175,7 +175,7 @@ function login(n){ME=n;sessionStorage.setItem(SES,n);
   document.getElementById('loginPage').classList.add('hide');
   document.getElementById('app').classList.remove('hide');
   document.getElementById('whoami').textContent='· '+n;go('rec');handRemind();
-  pull(function(r){if(r){merge(r);if(p==='rec')pageRec()}})}
+  pull(function(r){if(r){merge(r)}})}
 function logout(){sessionStorage.removeItem(SES);location.reload()}
 
 /* ---- 路由 ---- */
