@@ -136,7 +136,6 @@ function renderPeople(){var g=document.getElementById('peopleGrid');g.innerHTML=
     b.innerHTML=RANK[n]?n+'<br><small style="color:#8a93a3;font-weight:normal">'+RANK[n]+'</small>':n;
     b.onclick=function(){login(n)};g.appendChild(b)})}
 function loginCustom(){var v=document.getElementById('newPerson').value.trim();if(!v)return;
-  if(DB.people.indexOf(v)<0){DB.people.push(v);commit()}
   login(v)}
 function addPerson(){var v=document.getElementById('newPerson').value.trim();if(!v)return;
   if(DB.people.indexOf(v)<0){DB.people.push(v);commit();renderPeople();notify("👋 **"+v+"** 加入了看护组")}
