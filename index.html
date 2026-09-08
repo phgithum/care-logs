@@ -242,9 +242,31 @@ function saveBill(){
 function renderBills(){
   var l=DB.bills.filter(function(b){return b.d===today()});
   var sum=0;
-  document.getElementById('bList').innerHTML=l.length?l.map(function(b){sum+=b.m;
-    return '<div class="item"><b>'+b.c+'</b> — <span class="money">'+b.m.toFixed(1)+' 元</span><div class="t">'+b.by+' '+b.t+'</div></div>'}).join(''):'<div class="empty">今天还没花钱记录</div>';
+  document.getElementById('bList').innerHTML=l.length?l.map(function(b){sum+=b.m;var i=DB.bills.indexOf(b);
+    return '<div class="item"><b>'+b.c+'</b> — <span class="money">'+b.m.toFixed(1)+' 元</span>'
+      +'<div class="t">'+b.by+' '+b.t+'</div>'
+      +'<div style="margin-top:6px"><button class="gray small" onclick="editBill('+i+')">改</button> '
+      +'<button class="gray small" onclick="delBill('+i+')">删</button></div></div>'}).join(''):'<div class="empty">今天还没花钱记录</div>';
   document.getElementById('bTotal').textContent='今天合计：'+sum.toFixed(1)+' 元'}
+function editBill(i){
+  var b=DB.bills[i];if(!b)return;
+  document.getElementById('bD').value=b.d;document.getElementById('bM').value=b.m;
+  document.getElementById('bC').value=b.c;
+  var btn=document.querySelector('#main .card button.pri');
+  btn.textContent='更新这条';
+  btn.onclick=function(){
+    var m=parseFloat(document.getElementById('bM').value),c=document.getElementById('bC').value.trim();
+    if(!m||!c){toast("填金额和买了什么");return}
+    var od=b.c+' '+b.m.toFixed(1)+'元';
+    b.d=document.getElementById('bD').value||today();b.m=m;b.c=c;
+    commit();pageBill();
+    document.getElementById('bMsg').textContent='✅ 已更新';
+    notify("✏️ **"+ME+"** 改了账：~~"+od+"~~ → **"+c+" "+m.toFixed(1)+" 元**")}}
+function delBill(i){
+  var b=DB.bills[i];if(!b)return;
+  if(!confirm('删除这条？\n'+b.c+' '+b.m.toFixed(1)+' 元（'+b.by+' '+b.t+'）'))return;
+  DB.bills.splice(i,1);commit();pageBill();
+  notify("🗑️ **"+ME+"** 删了账：**"+b.c+" "+b.m.toFixed(1)+" 元**（"+b.by+" 记的）")}
 
 /* ================= 交接页 ================= */
 function curShift(){return shiftOf(now())}
