@@ -193,7 +193,7 @@ function pageRec(){
     +'<div id="itemTimes"></div>'
     +'<label>补充说明（状态等）</label><textarea id="rN" placeholder="例如：大便正常成型；血压135/88"></textarea>'
     +'<div style="margin-top:10px"><button class="pri" onclick="saveRec()">保存</button></div><div class="ok" id="rMsg"></div></div>'
-    +'<div class="card"><h3>今天的记录</h3><div id="recStats" class="tip" style="margin-bottom:8px"></div><div id="rList"></div></div>';
+    +'<div class="card"><h3>今天的记录 <span style="float:right;font-size:13px;color:#2f6fed;cursor:pointer" onclick="refreshRec()" id="recRefresh">⟳ 刷新</span></h3><div id="recStats" class="tip" style="margin-bottom:8px"></div><div id="rList"></div></div>';
   document.getElementById('main').innerHTML=h;pick={};renderToday()}
 var TIMED=['吃药','大便','小便'];
 function pk(el,t){
@@ -218,6 +218,8 @@ function saveRec(){
   document.querySelectorAll('.chip.on').forEach(function(e){e.classList.remove('on')});
   document.getElementById('rMsg').textContent='✅ 已保存';renderToday();
   notify("📝 **"+ME+"** "+d+" "+t+"（"+sn(r.s)+"班）\n"+c)}
+function refreshRec(){var b=document.getElementById('recRefresh');b.textContent='⟳ 拉取中…';
+  pull(function(r){b.textContent='⟳ 刷新';if(r)merge(r);renderToday()})}
 function renderToday(){var l=DB.records.filter(function(r){return r.d===today()}).sort(function(a,b){return a.t<b.t?1:-1});
   var cnt=function(k){return l.filter(function(r){return r.c.indexOf(k)>=0}).length};
   document.getElementById('recStats').textContent='今日统计：大便 '+cnt('大便')+' 次 · 小便 '+cnt('小便')+' 次 · 吃药 '+cnt('吃药')+' 次（早中晚各 1 次为达标）';
