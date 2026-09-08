@@ -252,8 +252,7 @@ function saveBill(){
   if(!m||!c){toast("填金额和买了什么");return}
   DB.bills.push({id:''+Date.now()+Math.floor(Math.random()*999),d:d,m:m,c:c,by:ME,t:now()});
   commit();document.getElementById('bC').value='';document.getElementById('bM').value='';
-  document.getElementById('bMsg').textContent='✅ 已保存';renderBills();
-  notify("💰 **"+ME+"** 记账 "+d+"\n"+c+"：**"+m.toFixed(1)+" 元**")}
+  document.getElementById('bMsg').textContent='✅ 已保存';renderBills()}
 function renderBills(){
   var l=DB.bills.filter(function(b){return b.d===today()});
   var sum=0;
@@ -275,13 +274,11 @@ function editBill(i){
     var od=b.c+' '+b.m.toFixed(1)+'元';
     b.d=document.getElementById('bD').value||today();b.m=m;b.c=c;
     commit();pageBill();
-    document.getElementById('bMsg').textContent='✅ 已更新';
-    notify("✏️ **"+ME+"** 改了账：~~"+od+"~~ → **"+c+" "+m.toFixed(1)+" 元**")}}
+    document.getElementById('bMsg').textContent='✅ 已更新'}}
 function delBill(i){
   var b=DB.bills[i];if(!b)return;
   if(!confirm('删除这条？\n'+b.c+' '+b.m.toFixed(1)+' 元（'+b.by+' '+b.t+'）'))return;
-  DB.bills.splice(i,1);commit();pageBill();
-  notify("🗑️ **"+ME+"** 删了账：**"+b.c+" "+b.m.toFixed(1)+" 元**（"+b.by+" 记的）")}
+  DB.bills.splice(i,1);commit();pageBill()}
 
 /* ================= 交接页 ================= */
 function curShift(){return shiftOf(now())}
