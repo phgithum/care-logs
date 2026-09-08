@@ -87,7 +87,7 @@ button{border:none;border-radius:8px;padding:9px 16px;font-size:14px;cursor:poin
     <button class="gray" onclick="location.reload()">刷新</button>
   </div>
   <div class="ok" id="msg"></div>
-  <div class="tip" style="margin:10px 0 30px">群机器人 Webhook 已存好，改提醒不用动它。回到看护记录：<a href="https://phgithum.github.io/care-logs/">phgithum.github.io/care-logs</a></div>
+  <div class="tip" style="margin:10px 0 30px"><a style="cursor:pointer;color:#e5484d" onclick="localStorage.removeItem('care_admin_ok');location.reload()">退出后台</a>　·　群机器人 Webhook 已存好，改提醒不用动它。回到看护记录：<a href="https://phgithum.github.io/care-logs/">phgithum.github.io/care-logs</a></div>
 </div>
 
 <script>
@@ -102,12 +102,16 @@ var CONFIG={people:['张丽珍','张苏珍','张巧珍','张榕珍','张如珍']
          {t:'21:00',at:'all',msg:'🌙 晚间提醒\n今天晚班的人记得：\n1. 量晚间血压\n2. 在【看护记录】里完成交接班'}]};
 function tk(){return localStorage.getItem('care_admin_token')||''}
 function gh(){return{"Authorization":"Bearer "+tk(),"Accept":"application/vnd.github+json","Content-Type":"application/json","User-Agent":"care"}}
+var OKKEY='care_admin_ok';
+function gateOk(){var t=+localStorage.getItem(OKKEY)||0;return Date.now()-t<30*864e5}
+function enter(){document.getElementById('gate').classList.add('hide');
+  document.getElementById('app').classList.remove('hide');
+  document.getElementById('cfgToken').value=tk();init()}
 function tryGate(){
   if(document.getElementById('gpwd').value===PWD){
-    document.getElementById('gate').classList.add('hide');
-    document.getElementById('app').classList.remove('hide');
-    document.getElementById('cfgToken').value=tk();init();
+    localStorage.setItem(OKKEY,''+Date.now());enter();
   }else document.getElementById('gmsg').textContent='密码不对'}
+if(gateOk())enter();
 function init(){
   if(!tk()){document.getElementById('msg').textContent='先填上面 Token 再刷新';return}
   var x=new XMLHttpRequest();x.open("GET","https://api.github.com/repos/"+REPO+"/contents/"+CFGFILE);
